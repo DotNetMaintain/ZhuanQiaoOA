@@ -1,0 +1,438 @@
+﻿@{
+    ViewBag.Title = "邮件回复";
+    Business.Platform.Dictionary BDictionary = new Business.Platform.Dictionary();
+    Business.Platform.Mail email = new Business.Platform.Mail();
+    Business.Platform.Mails_Detail emaildetail = new Business.Platform.Mails_Detail();
+    Data.Model.Mails objmail = new Data.Model.Mails();
+    Data.Model.Mails_Detail objmaildetail = new Data.Model.Mails_Detail();
+    
+    Business.Platform.Users BUser = new Business.Platform.Users();
+    var id = Request.QueryString["id"];
+    var type = Request.QueryString["type"];
+
+    string subject = string.Empty;
+    string SenderIDs = string.Empty;
+    string bodys = string.Empty;
+    string ReceiverID=string.Empty ;
+    string fileattech=string.Empty;
+    string sendtime = string.Empty;
+    string[] listReceiverID = null;
+    
+    
+    if (!string.IsNullOrEmpty(id))
+    {
+
+        objmail = email.Get(Convert.ToInt32(id));
+        objmaildetail = emaildetail.Get(objmail.did);
+        subject = objmail.Subject.ToString();
+        SenderIDs = objmail.SenderIDs.ToString();
+        ReceiverID = objmail.ReceiverID.ToString();
+        listReceiverID = ReceiverID.Split(',');
+        bodys = objmaildetail.Bodys;
+        fileattech = objmaildetail.Attachments;
+        sendtime = objmail.SendTime.ToString();
+    }
+
+
+
+}
+
+
+
+
+
+<script type="text/javascript" src="../../js/validator.js"></script>
+<link type="text/css" href="../../manage/Style/InterFace.Css" rel="stylesheet" rev="stylesheet" media="all" />
+<link type="text/css" href="../../manage/style.css" rel="stylesheet" rev="stylesheet" media="all" />
+<script type="text/javascript" src="../../js/jquery.js"></script>
+<script type="text/javascript" src="../../js/FunctionJS.js"></script>
+<script type="text/javascript" src="../../manage/include/common.js"></script>
+
+<link rel="stylesheet" href="../../KindEditor4/themes/default/default.css" />
+<link rel="stylesheet" href="../../KindEditor4/plugins/code/prettify.css" />
+<script type="text/javascript" charset="utf-8" src="../../KindEditor4/kindeditor.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../KindEditor4/lang/zh_CN.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../KindEditor4/plugins/code/prettify.js"></script>
+
+<script type="text/javascript">
+
+    KindEditor.ready(function (K) {
+        var editor1 = K.create('#Bodys', {
+            cssPath: '../../KindEditor4/plugins/code/prettify.css',
+            uploadJson: '../../KindEditor4/upload_json.aspx',
+            fileManagerJson: '../../KindEditor4/file_manager_json.aspx'
+        });
+        prettyPrint();
+    });
+
+
+    $(function () {
+        @Html.Raw(ViewBag.Script);
+        top.mainDialog.close();
+
+      
+
+    });
+
+
+
+    
+
+
+
+    function showProcessing(type) {
+        var title = "正在处理";
+        switch (type) {
+            case "save": title = "正在保存..."; break;
+            case "submit": title = "正在发送..."; break;
+            case "back": title = "正在退回..."; break;
+            case "redirect": title = "正在转交..."; break;
+        }
+
+        var iframeid = document.forms[0];
+        top.mainDialog.open({
+            title: title, width: 260, height: 120, url: top.rootdir + "/WorkFlowRun/Process?op=" + type,
+            openerid: iframeid, resize: false, showclose: true, showico: true
+        });
+    }
+
+
+    function mailsend() {
+        var options = {};
+        options.type = "submit";
+        showProcessing(options.type);
+
+    }
+
+
+
+    function deleteRow(index) {
+        var index = index.parentNode.parentNode.rowIndex;
+        var tab = document.getElementById('tab');
+        tab.deleteRow(index);
+        var ax = document.getElementsByTagName("a");
+        var lstAttech = "";
+            var axlength = ax.length;
+            for (var i = 0; i < ax.length; i++)
+            {
+                if (ax[i].id == "")
+                {
+                    continue;
+                }
+
+                
+                    if (i == axlength - 1)
+                    {
+                        lstAttech = lstAttech + ax[i].name;
+                    }
+                    else
+                    {
+                        lstAttech = lstAttech + ax[i].name + "|";
+                    }
+
+                
+            }
+
+
+            document.getElementById("arrfile").value = lstAttech;
+           // alert(document.getElementById("arrfile").value);
+
+
+    }
+
+
+
+
+
+    //function delrows(a) {
+        
+       
+    //    var ax = document.getElementsByTagName("a");
+    //    var bx = document.getElementsByTagName("button");
+    //    var chilenodebutton = document.getElementById("btn_del " + a).firstChild;
+    //    document.getElementById("btn_del " + a).removeChild(chilenodebutton);
+      
+    //    var lstAttech="";
+    //    var axlength = ax.length;
+    //    for (var i = 0; i < ax.length; i++)
+    //    {
+    //        if (ax[i].id == "")
+    //        {
+    //            continue;
+    //        }
+            
+    //        if (ax[i].id == a)
+    //        {
+    //            var childnode = document.getElementById(a).firstChild;
+    //            document.getElementById(a).removeChild(childnode);
+
+              
+    //        }
+    //        else
+    //        {
+    //            if (i == axlength - 1)
+    //            {
+    //                lstAttech = lstAttech + ax[i].name;
+    //            }
+    //            else
+    //            {
+    //                lstAttech = lstAttech + ax[i].name + "|";
+    //            }
+                
+    //        }
+            
+           
+    //       // 
+
+    //    }
+
+
+    //    document.getElementById("arrfile").value = lstAttech;
+    //    alert(document.getElementById("arrfile").value);
+
+      
+    //    //删除附件中的行
+       
+    //}
+
+
+</script>
+
+
+
+    <form id="form1" action="" method="post">
+        @Html.AntiForgeryToken()
+        <div id="interface_inside">
+            <div id="interface_quick">
+                <div class="interface_quick_left">您现在的操作 >> 回复邮件内容</div>
+                <div class="interface_quick_right">
+                    <a href="javascript:void(0)" onclick="javascript:window.location.replace(window.location.href);"><img style="vertical-align:middle;" src="/manage/images/reload.png" /><strong>刷新</strong></a>
+                    &nbsp; &nbsp;
+                    <a href="javascript:history.back();"><img style="vertical-align:middle;" src="/manage/images/ico_up1.gif" /><strong>后退</strong></a>
+                </div>
+                <div class="clearboth"></div>
+            </div>
+            <div id="interface_main">
+                <div id="tabs_config" class="tabsbox">
+
+                    <div class="clearboth"></div>
+
+
+                    <!-- 模块 -->
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>
+
+                                <div id="config_basic1" class="tabs_wrapper">
+                                    <div class="tabs_main" align="left">
+                                        <div id="PanelConfig">
+
+
+                                            <table class="table1">
+                                                <thead>
+                                                    <tr>
+                                                        <td><a href="#" class="helpall">[?]</a></td>
+                                                        <td>
+                                                            <input type="submit" class="button" name="Save" value='发送' onclick="mailsend()" />
+
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                                <tr>
+                                                    <th style="width:140px; font-weight:bold;">&nbsp;* 主题：<a href="#" class="help">[?]</a></th>
+                                                    <td>
+                                                        <span class="note">请输入 主题.</span>
+                                                        @if (@type == "1")
+                                                        {
+                                                            <input name="Mails.Subject" datatype="Require" msg="主题不能为空" type="text" value="关于 @subject （回复）" id="Mails.Subject" size=97 />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input name="Mails.Subject" datatype="Require" msg="主题不能为空" type="text" value="转发： @subject " id="Mails.Subject" size=97 />
+                                                        }
+
+                                                    </td>
+                                                </tr>
+
+                                                <tr id=tr>
+                                                    <th style="width:140px; font-weight:bold;">&nbsp;收件人：<a href="#" class="help">[?]</a></th>
+                                                    <td>
+                                                        @{
+                                                            if (@type == "1")
+                                                            {
+                                                                <input type=hidden id=ReceiverID name=ReceiverID value="" />
+                                                                <input name="Mails.ReceiverID" type="text" id="Mails.ReceiverID" value="u_@SenderIDs" class="mymember" style="width:500px;" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <input type=hidden id=ReceiverID name=ReceiverID value="" />
+                                                                <input name="Mails.ReceiverID" type="text" id="Mails.ReceiverID" class="mymember" style="width:500px;" />
+                                                            }
+                                                        }
+
+                                                    </td>
+                                                </tr>
+                                                <tr id=tr>
+                                                    <th style="width:140px; font-weight:bold;">&nbsp;抄送：<a href="#" class="help">[?]</a></th>
+                                                    <td>
+
+                                                        <input type=hidden id=CCIDs name=CCIDs value="" />
+                                                        <input name="Mails.CCIDs" type="text" id="Mails.CCIDs" class="mymember" style="width:500px;" />
+
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <th style="width:140px; font-weight:bold;">* 正文&nbsp;<a href="#" class="help">[?]</a></th>
+                                                    <td>
+                                                        <span style="font:bold 12px arial,verdana;">请输入 正文内容. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Shift+Enter 换行, Enter 段落</span>
+                                                        <span style="font:normal 20px 宋体,verdana;">
+                                                            <textarea id="Bodys" name="Bodys" style="width: 80%; height: 300px; ">
+
+                                                                @{
+                                                                    if (type == "2")
+                                                                    { 
+                                                                    @Html.Raw("</br></br></br></br><span style='font-family:宋体; font-size: 15px; color: black;'>-------- 转发邮件信息 --------")
+                                                                    @Html.Raw("<br>发件人：")@BUser.Get(SenderIDs.ToGuid()).Name
+                                                                    @Html.Raw("</br>发送日期：")@sendtime
+                                                                    @Html.Raw("</br>收件人：")
+                                                               
+                                                                        string receives = string.Empty;
+                                                                        foreach (var receive in listReceiverID)
+                                                                        {
+                                                                            if (receive.Substring(0, 2) == "u_")
+                                                                            {
+                                                                                receives = receives + BUser.Get(receive.Substring(2).ToGuid()).Name + ",";
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                if (BUser.Get(receive.ToGuid()) != null)
+                                                                                {
+                                                                                    receives = receives + BUser.Get(receive.ToGuid()).Name + ",";
+                                                                                }
+                                                                                
+                                                                            }
+
+
+                                                                        }
+
+                                                             
+                                                                @receives
+                                                                @Html.Raw("</br>主题：")@subject
+                                                                    }
+
+                                                                    else
+                                                                    { 
+                                                                      @Html.Raw("</br></br></br></br><span style='font-family:宋体; font-size: 15px; color: black;'>在")@sendtime @Html.Raw("&nbsp;,")@BUser.Get(SenderIDs.ToGuid()).Name @Html.Raw("&nbsp;&nbsp;&nbsp;写道：</br>")
+                                                                    
+                                                                    }
+                                                                    
+                                                                }
+
+                                                                
+                                                               
+                                                             @Html.Raw("</br>") @bodys
+                                                             @Html.Raw("</span>")
+                                                            </textarea>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                   
+                                                    <th style="width:140px; font-weight:bold;">附件列表&nbsp;<a href="#" class="help">[?]</a></th>
+                                                    <td>
+                                                       
+                                                        <table id="tab">
+                                                           
+                                                            @{
+                                                                string attachment = string.Empty;
+
+                                                                if (!string.IsNullOrEmpty(objmaildetail.Attachments))
+                                                                {
+
+                                                                    if (objmaildetail.Attachments.Split('|').Length > 0)
+                                                                    {
+                                                                        string[] arrfilepath = objmaildetail.Attachments.Split('|');
+                                                                        for (int i = 0; i < arrfilepath.Length; i++)
+                                                                        {
+
+                                                                            if (string.IsNullOrEmpty(arrfilepath[i]))
+                                                                            {
+                                                                                continue;
+                                                                            }
+                                                                            if (arrfilepath.Length == 1)
+                                                                            {
+                                                                                attachment = arrfilepath[i];
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                if (i == arrfilepath.Length - 1)
+                                                                                {
+
+                                                                                    attachment = attachment + arrfilepath[i];
+                                                                                }
+                                                                                else
+                                                                                {
+
+                                                                                    attachment = attachment + arrfilepath[i] + "|";
+                                                                                }
+
+
+                                                                            }
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <a id="@i" name="@arrfilepath[i]" href="@arrfilepath[i]" target="_blank" class="blue">@arrfilepath[i].Substring(@arrfilepath[i].LastIndexOf('/') + 1)</a>            <input type="button" value="删除" onclick="deleteRow(this)" />
+                                                                                </td>
+                                                                            </tr>
+                                                                        }
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        attachment = attachment + objmaildetail.Attachments;
+                                                                        <tr>
+                                                                            <td>
+                                                                                <a id="attechfile0" name="attechfile" href="@objmaildetail.Attachments" target="_blank" class="blue">@objmaildetail.Attachments.Substring(@objmaildetail.Attachments.LastIndexOf('/') + 1)</a>  <input type="button" value="删除" onclick="deleteRow(this)" />
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+
+
+                                                                }
+                                                                <tr>
+                                                                    <td>
+                                                                        <input type="hidden" id="arrfile" name="arrfile" value="@attachment">
+                                                                    </td>
+                                                                </tr>
+
+
+
+                                                            }
+
+                                                        </table>
+                                                       
+                                                        <input size=71 name="Mails.fileattech" type="text" id="Mails.fileattech" class="myfile" />
+                                                    </td>
+                                                </tr>
+
+
+
+
+
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                 
+
+                </div>
+            </div>
+        </div>
+    </form>
+

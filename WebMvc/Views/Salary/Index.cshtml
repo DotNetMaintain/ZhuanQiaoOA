@@ -1,0 +1,942 @@
+﻿@{
+    Page.CheckApp = false;
+    ViewBag.Title = "Index";
+    string query = string.Format("appid={0}&tabid={1}", Request.QueryString["appid"], Request.QueryString["tabid"]);
+    Data.MSSQL.DBHelper dbHelper = new Data.MSSQL.DBHelper();
+
+
+
+    //string SalaryOtherON = @"select * from SalaryOtherON where  code='{0}'";
+    //SalaryOtherON = string.Format(sql, Business.Platform.Users.CurrentUser.Account);
+    //System.Data.DataTable dtSalaryOtherON = dbHelper.GetDataTable(SalaryOtherON);
+}
+
+@model System.Data.DataSet
+
+    @*添加Jquery EasyUI的样式*@
+    <link href="~/Content/JqueryEasyUI/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/JqueryEasyUI/themes/icon.css" rel="stylesheet" type="text/css" />
+
+    <link href="~/Content/themes/Default/style.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/themes/Default/default.css" rel="stylesheet" type="text/css" />
+
+    @*添加Jquery，EasyUI和easyUI的语言包的JS文件*@
+    <script type="text/javascript" src="~/Content/JqueryEasyUI/jquery.min.js"></script>
+    <script type="text/javascript" src="~/Content/JqueryEasyUI/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="~/Content/JqueryEasyUI/locale/easyui-lang-zh_CN.js"></script>
+
+
+   
+    <div id="loading" style="display: none;"><img alt="数据正在加载中..." src="~/Content/images/loading02.gif" /></div>
+    <div class="easyui-layout" id="tb" style="height:auto">
+        <!-------------------------------搜索框----------------------------------->
+        <fieldset>
+            <legend>信息查询</legend>
+            <form id="ffSearch" method="post">
+                @Html.AntiForgeryToken()
+                <div>
+                    
+
+                    <label for="txtLastUpdated">开始时间：</label>
+                    <input class="easyui-datebox" type="text" id="starttime" name="starttime" value="@ViewBag.starttime" style="width:100px" />&nbsp;&nbsp;&nbsp;
+
+                    <label for="txtLastUpdated2">结束时间：</label>
+                    <input class="easyui-datebox" type="text" id="endtime" name="endtime" value="@ViewBag.endtime" style="width:100px" />&nbsp;&nbsp;&nbsp;
+                    <input id="btnSearch" name="btnSearch"  type="submit" value="查询" />
+                
+                </div>
+            </form>
+        </fieldset>
+        
+        <!-------------------------------详细信息展示表格----------------------------------->
+
+        @{
+            
+            //非编工资
+            if (Model.Tables[0].Rows.Count > 0)
+            { 
+               <table class="easyui-datagrid" title="非编工资表">
+           
+            <thead>
+                <tr>
+                    <th data-options="field:'code',width:80,align:'center'">工号</th>
+                    <th data-options="field:'productid',width:100,align:'center'">姓名</th>
+                    <th data-options="field:'listprice',width:80,align:'center'">日期</th>
+                    <th data-options="field:'unitcost',width:80,align:'center'">备注</th>
+                    <th data-options="field:'Salary001',width:60,align:'center'">岗位工资</th>
+                    <th data-options="field:'Salary002',width:60,align:'center'">独生补贴</th>
+                    <th data-options="field:'Salary003',width:60,align:'center'">上下班交通费补贴</th>
+                    <th data-options="field:'Salary004',width:60,align:'center'">备一</th>
+                    <th data-options="field:'Salary005',width:60,align:'center'">备二</th>
+                    <th data-options="field:'Salary006',width:60,align:'center'">备三</th>
+                    <th data-options="field:'Salary007',width:60,align:'center'">补发数1</th>
+                    <th data-options="field:'Salary008',width:60,align:'center'">补发数2</th>
+                    <th data-options="field:'Salary009',width:60,align:'center'">补发数3</th>
+                    <th data-options="field:'Salary010',width:60,align:'center'">应发合计数</th>
+                    <th data-options="field:'Salary011',width:60,align:'center'">扣公积金</th>
+                    <th data-options="field:'Salary012',width:60,align:'center'">扣养老金</th>
+                    <th data-options="field:'Salary013',width:60,align:'center'">扣医保</th>
+                    <th data-options="field:'Salary014',width:60,align:'center'">失保</th>
+                    <th data-options="field:'Salary015',width:60,align:'center'">工会会费（手工）</th>
+                    <th data-options="field:'Salary016',width:60,align:'center'">病事假</th>
+                    <th data-options="field:'Salary017',width:60,align:'center'">其他扣1</th>
+                    <th data-options="field:'Salary018',width:60,align:'center'">其他扣2</th>
+                    <th data-options="field:'Salary019',width:60,align:'center'">其他扣3</th>
+                    <th data-options="field:'Salary020',width:60,align:'center'">应扣合计数</th>
+                    <th data-options="field:'Salary021',width:60,align:'center'">实发合计数</th>
+                    <th data-options="field:'Salary022',width:60,align:'center'">单位部分五险</th>
+                    <th data-options="field:'Salary023',width:60,align:'center'">单位部分公积金</th>
+                    <th data-options="field:'Salary024',width:60,align:'center'">单位部分职业年金</th>
+                </tr>
+            </thead>
+            @{
+                
+              for(int i=0;i<Model.Tables[0].Rows.Count;i++)
+              {
+                  
+                  <tr>
+                <td>@Model.Tables[0].Rows[i]["code"].ToString()</td>
+            
+                
+                <td>@Model.Tables[0].Rows[i]["name"].ToString()</td>
+           
+                <td>@Model.Tables[0].Rows[i]["inputdate"].ToString()</td>
+          
+                <td>@Model.Tables[0].Rows[i]["dept"].ToString()</td>
+                       
+                <td>@Model.Tables[0].Rows[i]["Salary001"].ToString()</td>
+          
+                <td>@Model.Tables[0].Rows[i]["Salary002"].ToString()</td>
+           
+                <td>@Model.Tables[0].Rows[i]["Salary003"].ToString()</td>
+            
+                <td>@Model.Tables[0].Rows[i]["Salary004"].ToString()</td>
+           
+                <td>@Model.Tables[0].Rows[i]["Salary005"].ToString()</td>
+           
+                <td>@Model.Tables[0].Rows[i]["Salary006"].ToString()</td>
+            
+                <td>@Model.Tables[0].Rows[i]["Salary007"].ToString()</td>
+            
+                <td>@Model.Tables[0].Rows[i]["Salary008"].ToString()</td>
+           
+                <td>@Model.Tables[0].Rows[i]["Salary009"].ToString()</td>
+           
+                <td>@Model.Tables[0].Rows[i]["Salary010"].ToString()</td>
+           
+                <td>@Model.Tables[0].Rows[i]["Salary011"].ToString()</td>
+              
+                <td>@Model.Tables[0].Rows[i]["Salary012"].ToString()</td>
+          
+                <td>@Model.Tables[0].Rows[i]["Salary013"].ToString()</td>
+           
+                <td>@Model.Tables[0].Rows[i]["Salary014"].ToString()</td>
+           
+                <td>@Model.Tables[0].Rows[i]["Salary015"].ToString()</td>
+           
+                <td>@Model.Tables[0].Rows[i]["Salary016"].ToString()</td>
+           
+                <td>@Model.Tables[0].Rows[i]["Salary017"].ToString()</td>
+            
+                <td>@Model.Tables[0].Rows[i]["Salary018"].ToString()</td>
+            
+                <td>@Model.Tables[0].Rows[i]["Salary019"].ToString()</td>
+           
+                <td>@Model.Tables[0].Rows[i]["Salary020"].ToString()</td>
+
+                <td>@Model.Tables[0].Rows[i]["Salary021"].ToString()</td>
+
+                <td>@Model.Tables[0].Rows[i]["Salary022"].ToString()</td>
+
+                <td>@Model.Tables[0].Rows[i]["Salary023"].ToString()</td>
+
+                <td>@Model.Tables[0].Rows[i]["Salary024"].ToString()</td>
+                     
+            </tr>
+                  
+              }
+             
+               
+            }
+                
+            
+            
+        </table>
+            }
+
+
+            //非编奖金
+             if (Model.Tables[1].Rows.Count > 0)
+            { 
+                <table class="easyui-datagrid" title="非编奖金表">
+            <thead>
+                <tr>
+                    <th data-options="field:'code',width:80,align:'center'">工号</th>
+                    <th data-options="field:'productid',width:100,align:'center'">姓名</th>
+                    <th data-options="field:'listprice',width:80,align:'center'">日期</th>
+                    <th data-options="field:'unitcost',width:80,align:'center'">备注</th>
+                    <th data-options="field:'Salary001',width:60,align:'center'">共性考核奖</th>
+                    <th data-options="field:'Salary002',width:60,align:'center'">实发工作量津贴</th>
+                    <th data-options="field:'Salary003',width:60,align:'center'">加奖1</th>
+                    <th data-options="field:'Salary004',width:60,align:'center'">加奖2</th>
+                    <th data-options="field:'Salary005',width:60,align:'center'">加奖3</th>
+                    <th data-options="field:'Salary006',width:60,align:'center'">扣奖1</th>
+                    <th data-options="field:'Salary007',width:60,align:'center'">扣奖2</th>
+                    <th data-options="field:'Salary008',width:60,align:'center'">扣奖3</th>
+                    <th data-options="field:'Salary012',width:60,align:'center'">扣税款1</th>
+                    <th data-options="field:'Salary011',width:60,align:'center'">实发绩效奖</th>
+                    <th data-options="field:'Salary009',width:60,align:'center'">计税基数</th>
+                    <th data-options="field:'Salary010',width:60,align:'center'">扣税款</th>
+                  
+
+                </tr>
+            </thead>
+            @{
+
+                for (int i = 0; i < Model.Tables[1].Rows.Count; i++)
+                {
+
+                    <tr>
+                        <td>@Model.Tables[1].Rows[i]["code"].ToString()</td>
+
+
+                        <td>@Model.Tables[1].Rows[i]["name"].ToString()</td>
+
+                        <td>@Model.Tables[1].Rows[i]["inputdate"].ToString()</td>
+
+                        <td>@Model.Tables[1].Rows[i]["dept"].ToString()</td>
+
+                        <td>@Model.Tables[1].Rows[i]["Salary001"].ToString()</td>
+
+                        <td>@Model.Tables[1].Rows[i]["Salary002"].ToString()</td>
+
+                        <td>@Model.Tables[1].Rows[i]["Salary003"].ToString()</td>
+
+                        <td>@Model.Tables[1].Rows[i]["Salary004"].ToString()</td>
+
+                        <td>@Model.Tables[1].Rows[i]["Salary005"].ToString()</td>
+
+                        <td>@Model.Tables[1].Rows[i]["Salary006"].ToString()</td>
+
+                        <td>@Model.Tables[1].Rows[i]["Salary007"].ToString()</td>
+
+                        <td>@Model.Tables[1].Rows[i]["Salary008"].ToString()</td>
+
+                        <td>@Model.Tables[1].Rows[i]["Salary012"].ToString()</td>
+
+                        <td>@Model.Tables[1].Rows[i]["Salary011"].ToString()</td>
+
+                        <td>@Model.Tables[1].Rows[i]["Salary009"].ToString()</td>
+
+                        <td>@Model.Tables[1].Rows[i]["Salary010"].ToString()</td>
+
+                       
+
+                       
+                    </tr>
+
+                }
+
+
+            }
+
+
+
+        </table>
+                 
+             }
+             
+             
+             //非编其他
+             if (Model.Tables[2].Rows.Count > 0)
+            {
+                <table class="easyui-datagrid" title="非编其他表">
+            <thead>
+                <tr>
+                    <th data-options="field:'code',width:80,align:'center'">工号</th>
+                    <th data-options="field:'productid',width:100,align:'center'">姓名</th>
+                    <th data-options="field:'listprice',width:80,align:'center'">日期</th>
+                    <th data-options="field:'unitcost',width:80,align:'center'">备注</th>
+                    <th data-options="field:'Salary001',width:60,align:'center'">加班费</th>
+                    <th data-options="field:'Salary002',width:60,align:'center'">值班费</th>
+                    <th data-options="field:'Salary003',width:60,align:'center'">其他</th>
+                    <th data-options="field:'Salary004',width:60,align:'center'">加奖1</th>
+                    <th data-options="field:'Salary005',width:60,align:'center'">加奖2</th>
+                    <th data-options="field:'Salary006',width:60,align:'center'">节日费</th>
+                    <th data-options="field:'Salary007',width:60,align:'center'">精神文明奖</th>
+                    <th data-options="field:'Salary008',width:60,align:'center'">季度考核奖</th>
+                    <th data-options="field:'Salary009',width:60,align:'center'">半年度考核奖</th>
+                    <th data-options="field:'Salary010',width:60,align:'center'">年度考核奖</th>
+                    <th data-options="field:'Salary011',width:60,align:'center'">高温费</th>
+                    <th data-options="field:'Salary012',width:60,align:'center'">伙食费</th>
+                    <th data-options="field:'Salary013',width:60,align:'center'">额外交通补贴</th>
+                    <th data-options="field:'Salary014',width:60,align:'center'">额外通讯补贴</th>
+                    <th data-options="field:'Salary015',width:60,align:'center'">重大赛事补贴</th>
+                    <th data-options="field:'Salary016',width:60,align:'center'">突击任务奖励</th>
+                    <th data-options="field:'Salary017',width:60,align:'center'">年终一次性奖金</th>
+                    <th data-options="field:'Salary018',width:60,align:'center'">个性考核奖</th>
+                    <th data-options="field:'Salary019',width:60,align:'center'">体锻费</th>
+                    <th data-options="field:'Salary020',width:60,align:'center'">补发上年度金额</th>
+                    <th data-options="field:'Salary021',width:60,align:'center'">带薪年休假应休未休补偿</th>
+                    <th data-options="field:'Salary022',width:60,align:'center'">区一次性发放1</th>
+                    <th data-options="field:'Salary023',width:60,align:'center'">区一次性发放2</th>
+                    <th data-options="field:'Salary024',width:60,align:'center'">市一次性发放1</th>
+                    <th data-options="field:'Salary025',width:60,align:'center'">市一次性发放2</th>
+                    <th data-options="field:'Salary026',width:60,align:'center'">文明城区创建奖励</th>
+                    <th data-options="field:'Salary027',width:60,align:'center'">市文明单位奖励</th>
+
+                </tr>
+            </thead>
+            @{
+
+                for (int i = 0; i < Model.Tables[2].Rows.Count; i++)
+                {
+
+                    <tr>
+                        <td>@Model.Tables[2].Rows[i]["code"].ToString()</td>
+
+
+                        <td>@Model.Tables[2].Rows[i]["name"].ToString()</td>
+
+                        <td>@Model.Tables[2].Rows[i]["inputdate"].ToString()</td>
+
+                        <td>@Model.Tables[2].Rows[i]["dept"].ToString()</td>
+
+
+                        <td>@Model.Tables[2].Rows[i]["Salary001"].ToString()</td>
+
+                        <td>@Model.Tables[2].Rows[i]["Salary002"].ToString()</td>
+
+                        <td>@Model.Tables[2].Rows[i]["Salary003"].ToString()</td>
+
+                        <td>@Model.Tables[2].Rows[i]["Salary004"].ToString()</td>
+
+                        <td>@Model.Tables[2].Rows[i]["Salary005"].ToString()</td>
+
+                        <td>@Model.Tables[2].Rows[i]["Salary006"].ToString()</td>
+
+                        <td>@Model.Tables[2].Rows[i]["Salary007"].ToString()</td>
+
+                        <td>@Model.Tables[2].Rows[i]["Salary008"].ToString()</td>
+
+                        <td>@Model.Tables[2].Rows[i]["Salary009"].ToString()</td>
+
+                        <td>@Model.Tables[2].Rows[i]["Salary010"].ToString()</td>
+
+                        <td>@Model.Tables[2].Rows[i]["Salary011"].ToString()</td>
+                        <td>@Model.Tables[2].Rows[i]["Salary012"].ToString()</td>
+                        <td>@Model.Tables[2].Rows[i]["Salary013"].ToString()</td>
+                        <td>@Model.Tables[2].Rows[i]["Salary014"].ToString()</td>
+                        <td>@Model.Tables[2].Rows[i]["Salary015"].ToString()</td>
+                        <td>@Model.Tables[2].Rows[i]["Salary016"].ToString()</td>
+                        <td>@Model.Tables[2].Rows[i]["Salary017"].ToString()</td>
+                        <td>@Model.Tables[2].Rows[i]["Salary018"].ToString()</td>
+                        <td>@Model.Tables[2].Rows[i]["Salary019"].ToString()</td>
+                        <td>@Model.Tables[2].Rows[i]["Salary020"].ToString()</td>
+                        <td>@Model.Tables[2].Rows[i]["Salary021"].ToString()</td>
+                        <td>@Model.Tables[2].Rows[i]["Salary022"].ToString()</td>
+                        <td>@Model.Tables[2].Rows[i]["Salary023"].ToString()</td>
+                        <td>@Model.Tables[2].Rows[i]["Salary024"].ToString()</td>
+                        <td>@Model.Tables[2].Rows[i]["Salary025"].ToString()</td>
+                        <td>@Model.Tables[2].Rows[i]["Salary026"].ToString()</td>
+                        <td>@Model.Tables[2].Rows[i]["Salary027"].ToString()</td>
+
+                    </tr>
+
+                }
+
+
+            }
+
+
+
+        </table>
+             
+             }
+             
+             
+             //在编工资
+             if (Model.Tables[3].Rows.Count > 0)
+            {
+                 
+                   <table class="easyui-datagrid" title="在编工资表">
+
+            <thead>
+                <tr>
+                    <th data-options="field:'code',width:80,align:'center'">工号</th>
+                    <th data-options="field:'productid',width:100,align:'center'">姓名</th>
+                    <th data-options="field:'listprice',width:80,align:'center'">日期</th>
+                    <th data-options="field:'unitcost',width:80,align:'center'">备注</th>
+                    <th data-options="field:'Salary001',width:60,align:'center'">岗位工资</th>
+                    <th data-options="field:'Salary002',width:60,align:'center'">薪级工资</th>
+                    <th data-options="field:'Salary003',width:60,align:'center'">粮油补贴</th>
+                    <th data-options="field:'Salary004',width:60,align:'center'">护龄津贴</th>
+                    <th data-options="field:'Salary005',width:60,align:'center'">特殊岗位津贴</th>
+                    <th data-options="field:'Salary006',width:60,align:'center'">岗位津贴</th>
+                    <th data-options="field:'Salary007',width:60,align:'center'">上下班交通费补贴</th>
+                    <th data-options="field:'Salary008',width:60,align:'center'">独生补贴</th>
+                    <th data-options="field:'Salary009',width:60,align:'center'">备一</th>
+                    <th data-options="field:'Salary010',width:60,align:'center'">备二</th>
+                    <th data-options="field:'Salary011',width:60,align:'center'">备三</th>
+                    <th data-options="field:'Salary012',width:60,align:'center'">补发数1</th>
+                    <th data-options="field:'Salary013',width:60,align:'center'">补发数2</th>
+                    <th data-options="field:'Salary014',width:60,align:'center'">补发数3</th>
+                    <th data-options="field:'Salary015',width:60,align:'center'">应发合计数</th>
+                    <th data-options="field:'Salary016',width:60,align:'center'">扣公积金</th>
+                    <th data-options="field:'Salary017',width:60,align:'center'">扣养老金</th>
+                    <th data-options="field:'Salary018',width:60,align:'center'">扣医保</th>
+                    <th data-options="field:'Salary019',width:60,align:'center'">失保</th>
+                    <th data-options="field:'Salary020',width:60,align:'center'">扣职业年金</th>
+                    <th data-options="field:'Salary021',width:60,align:'center'">病事假</th>
+                    <th data-options="field:'Salary022',width:60,align:'center'">扣税款</th>
+                    <th data-options="field:'Salary023',width:60,align:'center'">工会会费</th>
+                    <th data-options="field:'Salary024',width:60,align:'center'">其他扣1</th>
+                    <th data-options="field:'Salary025',width:60,align:'center'">其他扣2</th>
+                    <th data-options="field:'Salary026',width:60,align:'center'">其他扣3</th>
+                    <th data-options="field:'Salary027',width:60,align:'center'">应扣合计数</th>
+                    <th data-options="field:'Salary028',width:60,align:'center'">实发合计数</th>
+                    <th data-options="field:'Salary029',width:60,align:'center'">单位部分五险</th>
+                    <th data-options="field:'Salary030',width:60,align:'center'">单位部分公积金</th>
+                    <th data-options="field:'Salary031',width:60,align:'center'">单位部分职业年金</th>
+
+
+                </tr>
+            </thead>
+            @{
+
+                for (int i = 0; i < Model.Tables[3].Rows.Count; i++)
+                {
+
+                   <tr>
+                        <td>@Model.Tables[3].Rows[i]["code"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["name"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["inputdate"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["dept"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary001"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary002"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary003"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary004"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary005"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary006"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary007"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary008"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary009"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary010"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary011"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary012"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary013"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary014"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary015"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary016"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary017"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary018"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary019"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary020"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary021"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary022"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary023"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary024"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary025"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary026"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary027"].ToString()</td>
+                        <td>@Model.Tables[3].Rows[i]["Salary028"].ToString()</td>
+                       <td>@Model.Tables[3].Rows[i]["Salary029"].ToString()</td>
+                       <td>@Model.Tables[3].Rows[i]["Salary030"].ToString()</td>
+                       <td>@Model.Tables[3].Rows[i]["Salary031"].ToString()</td>
+
+                    </tr>
+
+                }
+
+
+            }
+
+
+
+        </table>
+             
+             }
+
+             //在编奖金
+
+             if (Model.Tables[4].Rows.Count > 0)
+             {
+                 
+                   <table class="easyui-datagrid" title="在编奖金表">
+            <thead>
+                <tr>
+                    <th data-options="field:'code',width:80,align:'center'">工号</th>
+                    <th data-options="field:'productid',width:100,align:'center'">姓名</th>
+                    <th data-options="field:'listprice',width:80,align:'center'">日期</th>
+                    <th data-options="field:'unitcost',width:80,align:'center'">备注</th>
+                    <th data-options="field:'Salary001',width:60,align:'center'">共性考核奖</th>
+                    <th data-options="field:'Salary002',width:60,align:'center'">实发工作量津贴</th>
+                    <th data-options="field:'Salary003',width:60,align:'center'">精神文明奖</th>
+                    <th data-options="field:'Salary004',width:60,align:'center'">加奖1</th>
+                    <th data-options="field:'Salary005',width:60,align:'center'">加奖2</th>
+                    <th data-options="field:'Salary006',width:60,align:'center'">加奖3</th>
+                    <th data-options="field:'Salary007',width:60,align:'center'">扣奖1</th>
+                    <th data-options="field:'Salary008',width:60,align:'center'">扣奖2</th>
+                    <th data-options="field:'Salary009',width:60,align:'center'">扣奖3</th>
+                    <th data-options="field:'Salary013',width:60,align:'center'">扣税款1</th>
+                    <th data-options="field:'Salary012',width:60,align:'center'">实发绩效奖</th>
+                    <th data-options="field:'Salary011',width:60,align:'center'">计税基数</th>
+                    <th data-options="field:'Salary010',width:60,align:'center'">扣税款</th>
+                   
+                    
+
+                </tr>
+            </thead>
+            @{
+
+                 for (int i = 0; i < Model.Tables[4].Rows.Count; i++)
+                {
+
+                     <tr>
+                        <td>@Model.Tables[4].Rows[i]["code"].ToString()</td>
+                        <td>@Model.Tables[4].Rows[i]["name"].ToString()</td>
+                        <td>@Model.Tables[4].Rows[i]["inputdate"].ToString()</td>
+                        <td>@Model.Tables[4].Rows[i]["dept"].ToString()</td>
+                        <td>@Model.Tables[4].Rows[i]["Salary001"].ToString()</td>
+                        <td>@Model.Tables[4].Rows[i]["Salary002"].ToString()</td>
+                        <td>@Model.Tables[4].Rows[i]["Salary003"].ToString()</td>
+                        <td>@Model.Tables[4].Rows[i]["Salary004"].ToString()</td>
+                        <td>@Model.Tables[4].Rows[i]["Salary005"].ToString()</td>
+                        <td>@Model.Tables[4].Rows[i]["Salary006"].ToString()</td>
+                        <td>@Model.Tables[4].Rows[i]["Salary007"].ToString()</td>
+                        <td>@Model.Tables[4].Rows[i]["Salary008"].ToString()</td>
+                        <td>@Model.Tables[4].Rows[i]["Salary009"].ToString()</td>
+                        <td>@Model.Tables[4].Rows[i]["Salary013"].ToString()</td>
+                        <td>@Model.Tables[4].Rows[i]["Salary012"].ToString()</td>
+                        <td>@Model.Tables[4].Rows[i]["Salary011"].ToString()</td>
+                        <td>@Model.Tables[4].Rows[i]["Salary010"].ToString()</td>
+                        
+                        
+
+
+                    </tr>
+
+                }
+
+
+            }
+
+
+
+        </table>
+
+             }
+
+             //在编其他
+
+             if (Model.Tables[5].Rows.Count > 0)
+             {
+                 
+                   <table class="easyui-datagrid" title="在编其他表">
+            <thead>
+                <tr>
+                    <th data-options="field:'code',width:80,align:'center'">工号</th>
+                    <th data-options="field:'productid',width:100,align:'center'">姓名</th>
+                    <th data-options="field:'listprice',width:80,align:'center'">日期</th>
+                    <th data-options="field:'unitcost',width:80,align:'center'">备注</th>
+                    <th data-options="field:'Salary001',width:60,align:'center'">加班费</th>
+                    <th data-options="field:'Salary002',width:60,align:'center'">值班费</th>
+                    <th data-options="field:'Salary003',width:60,align:'center'">其他</th>
+                    <th data-options="field:'Salary004',width:60,align:'center'">加奖1</th>
+                    <th data-options="field:'Salary005',width:60,align:'center'">加奖2</th>
+                    <th data-options="field:'Salary006',width:60,align:'center'">加奖3</th>
+                    <th data-options="field:'Salary007',width:60,align:'center'">节日费</th>
+                    <th data-options="field:'Salary008',width:60,align:'center'">精神文明奖</th>
+                    <th data-options="field:'Salary009',width:60,align:'center'">季度考核奖</th>
+                    <th data-options="field:'Salary010',width:60,align:'center'">半年度考核奖</th>
+                    <th data-options="field:'Salary011',width:60,align:'center'">年度考核奖</th>
+                    <th data-options="field:'Salary012',width:60,align:'center'">高温费</th>
+                    <th data-options="field:'Salary013',width:60,align:'center'">伙食费</th>
+                    <th data-options="field:'Salary014',width:60,align:'center'">额外交通补贴</th>
+                    <th data-options="field:'Salary015',width:60,align:'center'">额外通讯补贴</th>
+                    <th data-options="field:'Salary016',width:60,align:'center'">重大赛事补贴</th>
+                    <th data-options="field:'Salary017',width:60,align:'center'">突击任务奖励</th>
+                    <th data-options="field:'Salary018',width:60,align:'center'">年终一次性奖金</th>
+                    <th data-options="field:'Salary019',width:60,align:'center'">个性考核奖</th>
+                    <th data-options="field:'Salary020',width:60,align:'center'">体锻费</th>
+                    <th data-options="field:'Salary021',width:60,align:'center'">补发上年度金额</th>
+                    <th data-options="field:'Salary022',width:60,align:'center'">带薪年休假应休未休补偿</th>
+                    <th data-options="field:'Salary023',width:60,align:'center'">区一次性发放1</th>
+                    <th data-options="field:'Salary024',width:60,align:'center'">区一次性发放2</th>
+                    <th data-options="field:'Salary025',width:60,align:'center'">市一次性发放1</th>
+                    <th data-options="field:'Salary026',width:60,align:'center'">市一次性发放2</th>
+                    <th data-options="field:'Salary027',width:60,align:'center'">文明城区创建奖励</th>
+                    <th data-options="field:'Salary028',width:60,align:'center'">市文明单位奖励</th>
+
+                </tr>
+            </thead>
+            @{
+
+                 for (int i = 0; i < Model.Tables[5].Rows.Count; i++)
+                {
+
+                   <tr>
+                        <td>@Model.Tables[5].Rows[i]["code"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["name"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["inputdate"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["dept"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary001"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary002"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary003"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary004"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary005"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary006"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary007"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary008"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary009"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary010"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary011"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary012"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary013"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary014"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary015"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary016"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary017"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary018"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary019"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary020"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary021"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary022"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary023"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary024"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary025"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary026"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary027"].ToString()</td>
+                        <td>@Model.Tables[5].Rows[i]["Salary028"].ToString()</td>
+
+                    </tr>
+
+                }
+
+
+            }
+
+
+
+        </table>
+
+             }
+
+
+             //乡村医生工资
+
+             if (Model.Tables[6].Rows.Count > 0)
+             {
+
+                  <table class="easyui-datagrid" title="乡村医生工资">
+            <thead>
+                <tr>
+                    <th data-options="field:'code',width:80,align:'center'">工号</th>
+                    <th data-options="field:'productid',width:100,align:'center'">姓名</th>
+                    <th data-options="field:'listprice',width:80,align:'center'">日期</th>
+                    <th data-options="field:'unitcost',width:80,align:'center'">备注</th>
+                    <th data-options="field:'Salary001',width:60">岗位工资</th>
+                    <th data-options="field:'Salary002',width:60,align:'center'">职务津贴</th>
+                    <th data-options="field:'Salary003',width:60,align:'center'">车贴</th>
+                    <th data-options="field:'Salary004',width:60,align:'center'">补发数1</th>
+                    <th data-options="field:'Salary005',width:60,align:'center'">补发数2</th>
+                    <th data-options="field:'Salary006',width:60,align:'center'">补发数3</th>
+                    <th data-options="field:'Salary007',width:60,align:'center'">应发合计数</th>
+                    <th data-options="field:'Salary008',width:60,align:'center'">其他扣1</th>
+                    <th data-options="field:'Salary009',width:60,align:'center'">其他扣2</th>
+                    <th data-options="field:'Salary010',width:60,align:'center'">应扣合计数</th>
+                    <th data-options="field:'Salary011',width:60,align:'center'">实发合计数</th>
+                    <th data-options="field:'Salary012',width:60,align:'center'">单位部分五险</th>
+                    <th data-options="field:'Salary013',width:60,align:'center'">单位部分公积金</th>
+                    <th data-options="field:'Salary014',width:60,align:'center'">单位部分职业年金</th>
+
+                </tr>
+            </thead>
+            @{
+
+                 for (int i = 0; i < Model.Tables[6].Rows.Count; i++)
+                {
+
+                    <tr>
+                        <td>@Model.Tables[6].Rows[i]["code"].ToString()</td>
+                        <td>@Model.Tables[6].Rows[i]["name"].ToString()</td>
+                        <td>@Model.Tables[6].Rows[i]["inputdate"].ToString()</td>
+                        <td>@Model.Tables[6].Rows[i]["dept"].ToString()</td>
+                        <td>@Model.Tables[6].Rows[i]["Salary001"].ToString()</td>
+                        <td>@Model.Tables[6].Rows[i]["Salary002"].ToString()</td>
+                        <td>@Model.Tables[6].Rows[i]["Salary003"].ToString()</td>
+                        <td>@Model.Tables[6].Rows[i]["Salary004"].ToString()</td>
+                        <td>@Model.Tables[6].Rows[i]["Salary005"].ToString()</td>
+                        <td>@Model.Tables[6].Rows[i]["Salary006"].ToString()</td>
+                        <td>@Model.Tables[6].Rows[i]["Salary007"].ToString()</td>
+                        <td>@Model.Tables[6].Rows[i]["Salary008"].ToString()</td>
+                        <td>@Model.Tables[6].Rows[i]["Salary009"].ToString()</td>
+                        <td>@Model.Tables[6].Rows[i]["Salary010"].ToString()</td>
+                        <td>@Model.Tables[6].Rows[i]["Salary011"].ToString()</td>
+                        <td>@Model.Tables[6].Rows[i]["Salary012"].ToString()</td>
+                        <td>@Model.Tables[6].Rows[i]["Salary013"].ToString()</td>
+                        <td>@Model.Tables[6].Rows[i]["Salary014"].ToString()</td>
+
+                    </tr>
+
+                }
+
+
+            }
+
+
+
+        </table>
+                 
+             }
+
+
+             //乡村医生奖金
+
+             if (Model.Tables[7].Rows.Count > 0)
+             {
+
+                   <table class="easyui-datagrid" title="乡村医生奖金表">
+            <thead>
+                <tr>
+                    <th data-options="field:'code',width:80,align:'center'">工号</th>
+                    <th data-options="field:'productid',width:100,align:'center'">姓名</th>
+                    <th data-options="field:'listprice',width:80,align:'center'">日期</th>
+                    <th data-options="field:'unitcost',width:80,align:'center'">备注</th>
+                    <th data-options="field:'Salary001',width:60,align:'center'">实发工作量津贴</th>
+                    <th data-options="field:'Salary002',width:60,align:'center'">加奖1</th>
+                    <th data-options="field:'Salary003',width:60,align:'center'">加奖2</th>
+                    <th data-options="field:'Salary004',width:60,align:'center'">加奖3</th>
+                    <th data-options="field:'Salary005',width:60,align:'center'">扣奖1</th>
+                    <th data-options="field:'Salary006',width:60,align:'center'">扣奖2</th>
+                    <th data-options="field:'Salary007',width:60,align:'center'">扣奖3</th>
+                    <th data-options="field:'Salary008',width:60,align:'center'">实发绩效奖</th>
+
+
+                </tr>
+            </thead>
+            @{
+
+                 for (int i = 0; i < Model.Tables[7].Rows.Count; i++)
+                {
+
+                      <tr>
+                        <td>@Model.Tables[7].Rows[i]["code"].ToString()</td>
+                        <td>@Model.Tables[7].Rows[i]["name"].ToString()</td>
+                        <td>@Model.Tables[7].Rows[i]["inputdate"].ToString()</td>
+                        <td>@Model.Tables[7].Rows[i]["dept"].ToString()</td>
+                        <td>@Model.Tables[7].Rows[i]["Salary001"].ToString()</td>
+                        <td>@Model.Tables[7].Rows[i]["Salary002"].ToString()</td>
+                        <td>@Model.Tables[7].Rows[i]["Salary003"].ToString()</td>
+                        <td>@Model.Tables[7].Rows[i]["Salary004"].ToString()</td>
+                        <td>@Model.Tables[7].Rows[i]["Salary005"].ToString()</td>
+                        <td>@Model.Tables[7].Rows[i]["Salary006"].ToString()</td>
+                        <td>@Model.Tables[7].Rows[i]["Salary007"].ToString()</td>
+                        <td>@Model.Tables[7].Rows[i]["Salary008"].ToString()</td>
+
+
+                    </tr>
+
+                }
+
+
+            }
+
+
+
+        </table>
+                 
+             }
+
+
+             //退返工资
+
+             if (Model.Tables[8].Rows.Count > 0)
+             {
+
+                  <table class="easyui-datagrid" title="退返工资">
+            <thead>
+                <tr>
+                    <th data-options="field:'code',width:80,align:'center'">工号</th>
+                    <th data-options="field:'productid',width:100,align:'center'">姓名</th>
+                    <th data-options="field:'listprice',width:80,align:'center'">日期</th>
+                    <th data-options="field:'unitcost',width:80,align:'center'">备注</th>
+                    <th data-options="field:'Salary001',width:60,align:'center'">岗位工资</th>
+                    <th data-options="field:'Salary002',width:60,align:'center'">上下班交通费补贴</th>
+                    <th data-options="field:'Salary003',width:60,align:'center'">备一</th>
+                    <th data-options="field:'Salary004',width:60,align:'center'">备二</th>
+                    <th data-options="field:'Salary005',width:60,align:'center'">备三</th>
+                    <th data-options="field:'Salary006',width:60,align:'center'">补发数1</th>
+                    <th data-options="field:'Salary007',width:60,align:'center'">补发数2</th>
+                    <th data-options="field:'Salary008',width:60,align:'center'">补发数3</th>
+                    <th data-options="field:'Salary009',width:60,align:'center'">病事假</th>
+                    <th data-options="field:'Salary010',width:60,align:'center'">其他扣1</th>
+                    <th data-options="field:'Salary011',width:60,align:'center'">其他扣2</th>
+                    <th data-options="field:'Salary012',width:60,align:'center'">其他扣3</th>
+                    <th data-options="field:'Salary013',width:60,align:'center'">实发合计数</th>
+                    <th data-options="field:'Salary014',width:60,align:'center'">单位部分五险</th>
+                    <th data-options="field:'Salary015',width:60,align:'center'">单位部分公积金</th>
+                    <th data-options="field:'Salary016',width:60,align:'center'">单位部分职业年金</th>
+
+                </tr>
+            </thead>
+            @{
+
+                 for (int i = 0; i < Model.Tables[8].Rows.Count; i++)
+                {
+
+                     <tr>
+                        <td>@Model.Tables[8].Rows[i]["code"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["name"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["inputdate"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["dept"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["Salary001"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["Salary002"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["Salary003"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["Salary004"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["Salary005"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["Salary006"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["Salary007"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["Salary008"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["Salary009"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["Salary010"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["Salary011"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["Salary012"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["Salary013"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["Salary014"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["Salary015"].ToString()</td>
+                        <td>@Model.Tables[8].Rows[i]["Salary016"].ToString()</td>
+
+                    </tr>
+
+                }
+
+
+            }
+
+
+
+        </table>
+                 
+             }
+
+
+             //退返奖金
+
+             if (Model.Tables[9].Rows.Count > 0)
+             {
+                 
+                  <table class="easyui-datagrid" title="退返其他表">
+            <thead>
+                <tr>
+                    <th data-options="field:'code',width:80,align:'center'">工号</th>
+                    <th data-options="field:'productid',width:100,align:'center'">姓名</th>
+                    <th data-options="field:'listprice',width:80,align:'center'">日期</th>
+                    <th data-options="field:'unitcost',width:80,align:'center'">备注</th>
+                    <th data-options="field:'Salary001',width:60,align:'center'">加班费</th>
+                    <th data-options="field:'Salary002',width:60,align:'center'">值班费</th>
+                    <th data-options="field:'Salary003',width:60,align:'center'">其他</th>
+                    <th data-options="field:'Salary004',width:60,align:'center'">加奖1</th>
+                    <th data-options="field:'Salary005',width:60,align:'center'">节日费</th>
+                    <th data-options="field:'Salary006',width:60,align:'center'">精神文明奖</th>
+                    <th data-options="field:'Salary007',width:60,align:'center'">季度考核奖</th>
+                    <th data-options="field:'Salary008',width:60,align:'center'">半年度考核奖</th>
+                    <th data-options="field:'Salary009',width:60,align:'center'">年度考核奖</th>
+                    <th data-options="field:'Salary010',width:60,align:'center'">高温费</th>
+                    <th data-options="field:'Salary011',width:60,align:'center'">伙食费</th>
+                    <th data-options="field:'Salary012',width:60,align:'center'">额外交通补贴</th>
+                    <th data-options="field:'Salary013',width:60,align:'center'">额外通讯补贴</th>
+                    <th data-options="field:'Salary014',width:60,align:'center'">重大赛事补贴</th>
+                    <th data-options="field:'Salary015',width:60,align:'center'">突击任务奖励</th>
+                    <th data-options="field:'Salary016',width:60,align:'center'">年终一次性奖金</th>
+                    <th data-options="field:'Salary017',width:60,align:'center'">个性考核奖</th>
+                    <th data-options="field:'Salary018',width:60,align:'center'">体锻费</th>
+                    <th data-options="field:'Salary019',width:60,align:'center'">补发上年度金额</th>
+                    <th data-options="field:'Salary020',width:60,align:'center'">带薪年休假应休未休补偿</th>
+                    <th data-options="field:'Salary021',width:60,align:'center'">区一次性发放1</th>
+                    <th data-options="field:'Salary022',width:60,align:'center'">区一次性发放2</th>
+                    <th data-options="field:'Salary023',width:60,align:'center'">市一次性发放1</th>
+                    <th data-options="field:'Salary024',width:60,align:'center'">市一次性发放2</th>
+                    <th data-options="field:'Salary025',width:60,align:'center'">文明城区创建奖励</th>
+                    <th data-options="field:'Salary026',width:60,align:'center'">市文明单位奖励</th>
+
+                </tr>
+            </thead>
+            @{
+
+                 for (int i = 0; i < Model.Tables[9].Rows.Count; i++)
+                {
+
+                    <tr>
+                        <td>@Model.Tables[9].Rows[i]["code"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["name"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["inputdate"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["dept"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary001"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary002"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary003"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary004"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary005"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary006"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary007"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary008"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary009"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary010"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary011"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary012"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary013"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary014"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary015"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary016"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary017"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary018"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary019"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary020"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary021"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary022"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary023"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary024"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary025"].ToString()</td>
+                        <td>@Model.Tables[9].Rows[i]["Salary026"].ToString()</td>
+
+                    </tr>
+
+                }
+
+
+            }
+
+
+
+        </table>
+
+             }
+            
+        }
+       
+
+        
+     
+
+       
+
+
+      
+
+      
+
+      
+
+
+       
+
+      
+
+       
+
+       
+
+    </div>
+
+   
+

@@ -1,0 +1,177 @@
+﻿@{
+    Business.Platform.Dictionary BDictionary = new Business.Platform.Dictionary();
+    Business.Platform.WorkFlow BWorkFlow = new Business.Platform.WorkFlow();
+    Business.Platform.WorkFlowTask BWorkFlowTask = new Business.Platform.WorkFlowTask();
+}
+
+
+@model Data.Model.PaperDownload
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+<script type="text/javascript" src="../../js/validator.js"></script>
+<link type="text/css" href="../../manage/Style/InterFace.Css" rel="stylesheet" rev="stylesheet" media="all" />
+<link type="text/css" href="../../manage/style.css" rel="stylesheet" rev="stylesheet" media="all" />
+<script type="text/javascript" src="../../js/jquery.js"></script>
+<script type="text/javascript" src="../../manage/include/common.js"></script>
+<script type="text/javascript" src="../../js/formV/datepicker/WdatePicker.js"></script>
+
+<script type="text/javascript" src="../../js/popup/popup.js"></script>
+<script type="text/javascript">
+    function fAddAttach() {
+        var gAttchHTML = '<div><input type="file" name="attachfile"><input type="button" name="Submit" value=" 删除 " id="btnDeleteReadAttach" /></div><span></span>';
+        var Attach = document.getElementById("dvReadAttach");
+        var spnList = Attach.getElementsByTagName("SPAN");
+        var spn = document.createElement("DIV");
+        spn.innerHTML = gAttchHTML;
+        spn.childNodes[0].name = "attachfile[]" + spnList.length;
+        Attach.appendChild(spn); //增加gAttchHTML
+        fGetObjInputById(spn, "btnDeleteReadAttach").onclick = function () { fDeleteAttach(this); };
+        document.getElementById("aAddAttach").innerHTML = "继续添加档案附件";
+        Attach.style.display = "";
+    }
+
+    function fGetObjInputById(obj, id) {
+        var inputList = obj.getElementsByTagName("INPUT");
+        for (var i = 0; i < inputList.length; i++) {
+            if (inputList[i].id == id) {
+                return inputList[i];
+            }
+        }
+        return null;
+    }
+
+    function fDeleteAttach(obj) {
+        obj.parentNode.parentNode.parentNode.removeChild(obj.parentNode.parentNode);
+        var Attach = document.getElementById("dvReadAttach");
+        var spnList = Attach.getElementsByTagName("SPAN");
+        if (spnList.length == 0) {
+            document.getElementById("aAddAttach").innerHTML = "添加档案附件";
+            Attach.style.display = "none";
+        }
+        else {
+            document.getElementById("aAddAttach").innerHTML = "继续添加档案附件";
+        }
+    }
+
+    function ShowIframe() {
+        var users = document.getElementById("userlist_dep");
+        var pop = new Popup({ contentType: 1, scrollType: 'yes', isReloadOnClose: false, width: 468, height: 395 });
+        if (users.value == "") {
+            pop.setContent("contentUrl", "/Manage/Utils/SelectDep.aspx");
+        }
+        else {
+            var ids = "";
+            var objs = users.value.split(',');
+            for (var i = 0; i < objs.length; i++) {
+                if (objs[i].replace(/^\s*(.*?)[\s\n]*$/g, '$1') != "") {
+                    ids += objs[i].split('#')[1] + ";";
+                }
+            }
+
+            pop.setContent("contentUrl", "/Manage/Utils/SelectDep.aspx?v=" + ids);
+        }
+        pop.setContent("title", "电子档案 - 部门选择");
+        pop.build();
+        pop.show();
+    }
+</script>
+
+
+<body>
+    <form action="" method="post">
+        @Html.AntiForgeryToken()
+        <div id="interface_inside">
+            <div id="interface_quick">
+                <div class="interface_quick_left">您现在的操作 >> 电子表格 >> 编辑电子表格</div>
+                <div class="interface_quick_right">
+                    <a href="javascript:void(0)" onclick="javascript:window.location.replace(window.location.href);"><img style="vertical-align:middle;" src="../../manage/images/reload.png" /><strong>刷新</strong></a>
+                    &nbsp; &nbsp;
+                    <a href="javascript:history.back();"><img style="vertical-align:middle;" src="../../manage/images/ico_up1.gif" /><strong>后退</strong></a>
+                </div>
+                <div class="clearboth"></div>
+            </div>
+            <div id="interface_main">
+                <div id="tabs_config" class="tabsbox">
+
+                    <div class="clearboth"></div>
+
+
+                    <!-- 模块 -->
+
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>
+
+                                <div id="config_basic1" class="tabs_wrapper">
+                                    <div class="tabs_main" align="left">
+                                        <div id="PanelConfig">
+
+                                            <table class="table1">
+                                                <thead>
+                                                    <tr>
+                                                        <td><a href="#" class="helpall">[?]</a></td>
+                                                        <td>
+
+                                                            <input type="submit" class="button" name="Save" value='保存' />
+                                                            &nbsp;&nbsp; <input type="reset" class="button" value='重置' />
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                                <tr>
+                                                    <th style="width:140px; font-weight:bold;">&nbsp;* 标题：<a href="#" class="help">[?]</a></th>
+                                                    <td>
+                                                        <span class="note">请输入 标题.</span>
+                                                        <input name="PaperName" datatype="Require" msg="标题不能为空" type="text" value="@Model.Subject" id="PaperName" size=82 />
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <th style="width:145px; font-weight:bold;">&nbsp; 附件：<a href="#" class="help">[?]</a></th>
+                                                    <td>
+                                                        @{
+                                                            if (!string.IsNullOrEmpty(Model.FileAttech ))
+                                                            {
+                                                                if (Model.FileAttech.Split('|').Length > 0)
+                                                                {
+                                                                    string[] arrfilepath = Model.FileAttech.Split('|');
+                                                                    for (int i = 0; i < arrfilepath.Length; i++)
+                                                                    {
+                                                                        <a href="@arrfilepath[i]" target="_blank" class="blue">@arrfilepath[i].Substring(@arrfilepath[i].LastIndexOf('/') + 1)</a><br>
+                                                                    }
+
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a href="@Model.FileAttech" target="_blank" class="blue">@Model.FileAttech.Substring(@Model.FileAttech.LastIndexOf('/') + 1)</a>
+                                                                }
+                                                            }
+
+                                                        }
+
+
+                                                       
+                                                    </td>
+                                                </tr>
+
+
+
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- 模块 -->
+
+                </div>
+            </div>
+        </div>
+
+    </form>
+</body>
+
+
+

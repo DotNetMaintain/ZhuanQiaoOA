@@ -1,0 +1,178 @@
+﻿@{
+    
+    
+    Business.Platform.Dictionary BDictionary = new Business.Platform.Dictionary();
+    Business.Platform.PaperDownload bnotebook = new Business.Platform.PaperDownload();
+    List<Data.Model.PaperDownload> lstnotebook1 = new List<Data.Model.PaperDownload>();
+
+    List<Data.Model.PaperDownload> lstnotebook = bnotebook.GetAll();
+    int i = 0;
+}
+
+<link type="text/css" href="../../manage/Style/InterFace.Css" rel="stylesheet" rev="stylesheet" media="all" />
+<link type="text/css" href="../../manage/style.css" rel="stylesheet" rev="stylesheet" media="all" />
+<script type="text/javascript" src="../../js/jquery.js"></script>
+<script type="text/javascript" src="../../manage/include/common.js"></script>
+<link type="text/css" href="../../DK_Css/page_css.css" rel="stylesheet" />
+<script type="text/javascript" src="../../js/formV/datepicker/WdatePicker.js"></script>
+
+<script type="text/javascript" src="../../js/popup/popup.js"></script>
+<script type="text/javascript">
+    function depView(ud) {
+        var pop = new Popup({ contentType: 1, scrollType: 'yes', isReloadOnClose: false, width: 600, height: 375 });
+        pop.setContent("contentUrl", '/manage/Paper/PaperView.aspx?pid=' + ud);
+        pop.setContent("title", "查看电子档案");
+        pop.build();
+        pop.show();
+    }
+
+
+
+    function Delete(ID) {
+        if (confirm("确定要删除？")) {
+            url = "/Paper/Delete";     
+            parameter = { id: ID };
+            $.post(url, parameter, function (data) {
+                alert("删除成功！");
+                window.location = "/Paper/PaperList?appid=f91fe26d-5aa6-45f3-a830-2a76a9cf1db9&tabid=tab_f91fe26d5aa645f3a8302a76a9cf1db9";
+            });
+        }
+    }
+
+
+</script>
+
+<body>
+    <form id="form1" >
+        <div id="interface_inside">
+            <div id="interface_quick">
+                <div class="interface_quick_left">您现在的操作 >> 电子表格 >> 所有电子表格列表</div>
+                <div class="interface_quick_right">
+                    <a href="javascript:void(0)" onclick="javascript:window.location.replace(window.location.href);"><img style="vertical-align:middle;" src="/manage/images/reload.png" /><strong>刷新</strong></a>
+                    &nbsp; &nbsp;
+                    <a href="javascript:history.back();"><img style="vertical-align:middle;" src="../../manage/images/ico_up1.gif" /><strong>后退</strong></a>
+                </div>
+                <div class="clearboth"></div>
+            </div>
+            <div id="interface_main">
+                <div id="tabs_config" class="tabsbox">
+
+
+                    <div class="clearboth"></div>
+
+
+                    <!-- 模块 -->
+
+                    <table width="98%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>
+
+                                <div id="config_basic1" class="tabs_wrapper">
+                                    <div class="tabs_main" align="left">
+                                        <div id="PanelConfig">
+
+                                            <table class="table subsubmenu">
+                                                <thead>
+                                                    <tr>
+                                                        <td>
+                                                            所有电子表格列表
+                                                        </td>
+                                                        <td style="text-align:right">
+                                                            <input type=button name="s_bt" value="高级搜索" id="s_bt" onclick="javascript:$('#s_div').slideToggle('fast');" class="textbutton" />
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                            <br />
+
+                                            <div id="PanelDefault">
+                                                <div id=s_div style="display:none">
+                                                    <asp:Panel ID="panLogin" runat="server" DefaultButton="search_bt">
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <td><a href="#" class="helpall">[?]</a></td>
+                                                                    <td>
+                                                                        <input type=button name="search_bt" value="搜 索" id="search_bt" onclick="Search_Btn" class="button" />
+                                                                    </td>
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tr>
+                                                                <th style="width:140px; font-weight:bold;">&nbsp; 文件标题：<a href="#" class="help">[?]</a></th>
+                                                                <td>
+                                                                    <span class="note">请输入 你要搜索的文件标题.</span>
+                                                                    <input name="PaperName" maxlength=15 type="text" value="" id="PaperName" size=56 />
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <th style="width:140px; font-weight:bold;">&nbsp; 时间范围：<a href="#" class="help">[?]</a></th>
+                                                                <td>
+                                                                    <span class="note">请选择 文件日期的时间范围. </span>
+                                                                    <input id=StartTime name=StartTime type=text class="Wdate" datatype="Require" msg="起始时间不能为空" readonly onclick="WdatePicker({dateFmt:'yyyyMMdd'})"> 到
+                                                                    <input id=EndTime name=EndTime type=text class="Wdate" datatype="Require" msg="结束时间不能为空" readonly onclick="WdatePicker({dateFmt:'yyyyMMdd'})">
+                                                                </td>
+                                                            </tr>
+
+                                                        </table>
+                                                    </asp:Panel>
+                                                    <br />
+                                                </div>
+
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+
+                                                            <td width="50"><span style="margin-left:15px;">序</span></td>
+                                                            <td>电子表格附件下载</td>
+                                                            <td>操作</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+
+                                                        @foreach (var newslist in lstnotebook)
+                                                        {
+                                                            i = i + 1;
+                                                            <tr>
+
+                                                                <td width="50"><span style="margin-left:15px;">@i</span></td>
+                                                                <td><a href="@newslist.FileAttech" class="blue">@newslist.Subject</a></td>
+                                                                <td><input type="submit" onclick="Delete(@newslist.id)" value="删除" /></td>
+
+                                                            </tr>
+                                                        }
+
+
+                                                    </tbody>
+
+                                                </table>
+                                                <table class="table">
+                                                    <tr>
+                                                        <td class="page">
+                                                            <span style="float:left;" id=num</span>
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <br />
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- 模块 -->
+
+                </div>
+            </div>
+        </div>
+
+    </form>
+</body>
+

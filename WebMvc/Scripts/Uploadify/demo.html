@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Huploadify demo</title>
+
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="jquery.Huploadify.js"></script>
+<link rel="stylesheet" type="text/css" href="Huploadify.css"/>
+
+
+<script type="text/javascript">
+var original_img = "";
+var deal_img = "";
+
+function GetExt(file_name) {
+    var pos = file_name.lastIndexOf(".");
+    var result = file_name.substring(pos);
+    return result;
+}
+
+
+$(document).ready(function () {
+
+    $("#upload").Huploadify({
+
+        //选择文件后自动上传
+        auto: true,
+        //允许上传的文件后缀    
+        fileTypeExts: '*.jpg;*.png;*.jpeg',
+        //设置为true将允许多文件上传
+        multi: false,
+        //大小限制,整形单位是KB，字符串直接写
+        fileSizeLimit: '2MB',
+        uploader: '/uploadimage_do.aspx?w=520',
+        //上传文件页面中，你想要用来作为文件队列的元素的id, 默认为false  自动生成,  不带#
+        'queueID': 'fileQueue',
+        //发送给后台的其他参数通过formData指定
+        formData: { 'wpsname': '2222131231313' },
+        		breakPoints:true,
+        		saveInfoLocal:true,
+        		showUploadedPercent:true,//是否实时显示上传的百分比，如20%
+        		showUploadedSize:true,
+        		removeTimeout:9999999,		
+        onUploadSuccess: function (file) {
+            original_img = "/Uploads/certificatet/" + '2222131231313' + GetExt(file.name);
+            deal_img = "/Uploads/certificatet/" + '2222131231313' + "_" + GetExt(file.name);
+            $("#showimg").attr("src", deal_img + '?' + new Date());
+            $("#showimg").css("display", "block");
+            document.getElementById("showimg").style.width = "300px";
+            $("#img_del").css("display", "block");
+        },
+        onUploadComplete: function (file) {
+            
+            alert('上传完成');
+        }
+        
+
+    });
+
+
+})
+
+</script>
+</head>
+
+<body>
+
+
+<form>
+<div style="clear: both; margin-top: 15px;">
+          <div id="upload"></div>
+          <a href="javascript:void(0);" id="img_del" style="float: right; display: none; margin-left: 15px; color:#666;"> 删除</a>
+          <div id="fileQueue"></div>
+</div>
+<img id="showimg" src="" style="width: 100%; background: #eee; text-align: center; display:none; clear:both;" />
+
+</form>
+                               
+
+
+
+
+</body>
+</html>

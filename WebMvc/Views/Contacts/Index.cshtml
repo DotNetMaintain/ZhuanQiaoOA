@@ -1,0 +1,128 @@
+﻿@{
+    Page.CheckApp = false;
+    ViewBag.Title = "Index";
+   
+}
+@model List<Data.Model.UsersInfo>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link type="text/css" href="../../manage/Style/InterFace.Css" rel="stylesheet" rev="stylesheet" media="all" />
+    <link type="text/css" href="../../manage/style.css" rel="stylesheet" rev="stylesheet" media="all" />
+    <script type="text/javascript" src="../../js/jquery.js"></script>
+    <script type="text/javascript" src="../../manage/include/common.js"></script>
+    <script type="text/javascript" src="../../js/validator.js"></script>
+
+    <script type="text/javascript" src="../../js/popup/popup.js"></script>
+   <script type="text/javascript">
+    var win = new RoadUI.Window();
+    var validate = new RoadUI.Validate();
+</script>
+
+
+<body>
+    <form action="" method="post">
+        @Html.AntiForgeryToken()
+        <div id="interface_inside">
+            <div id="interface_quick">
+                <div class="interface_quick_left">您现在的操作 >> 我的工具 >> 员工通讯录</div>
+                <div class="interface_quick_right">
+                    <a href="javascript:void(0)" onclick="javascript:window.location.replace(window.location.href);"><img style="vertical-align:middle;" src="../../manage/images/reload.png" /><strong>刷新</strong></a>
+                    &nbsp; &nbsp;
+                    <a href="javascript:history.back();"><img style="vertical-align:middle;" src="../../manage/images/ico_up1.gif" /><strong>后退</strong></a>
+                </div>
+                <div class="clearboth"></div>
+            </div>
+            <div id="interface_main">
+                <div id="tabs_config" class="tabsbox">
+
+                    <div class="clearboth"></div>
+
+
+                    <!-- 模块 -->
+
+                    <table style=" width:100%;" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>
+
+                                <div id="config_basic1" class="tabs_wrapper">
+                                    <div class="tabs_main" align="left">
+                                        <div id="Div1">
+
+                                            <table class="table subsubmenu">
+                                                <thead>
+                                                    <tr>
+                                                        <td>
+                                                            <a href="/Contacts">员工通讯录</a>
+                                                        </td>
+                                                        <td style="text-align:right">
+                                                           
+                                                            <input type="text" name="keyword" maxlength=10  id="keyword" />
+                                                            <input type="submit" name="search_bt" id="search_bt" class="textbutton" >
+                                                              
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                            <br /> 
+
+                                            <div id="PanelConfig">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <td width="50"><span style="margin-left:15px;">工号</span></td>
+                                                            <td style="width:30%">姓名</td>
+                                                            <td style="width:15%">电话</td>
+                                                            <td style="width:15%">邮件</td>
+                                                            <td style="width:20%">地址</td>
+                                                            <td width="110"></td>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <!--
+
+                                                        通讯录内容
+                                                    -->
+
+
+                                                    <tbody>
+                                                       
+                                                            @{
+                                                                foreach (var userinfo in Model)
+                                                                {
+                                                                    <tr>
+                                                                        <td>@userinfo.MSN</td>
+                                                                        <td>@userinfo.Officer</td>
+                                                                        <td>@userinfo.Tel</td>
+                                                                        <td>@userinfo.Email</td>
+                                                                        <td>@userinfo.Address</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                      
+
+                                                        </tbody>
+                                                    <tr>
+                                                        <td class="page" colspan=7>
+                                                          
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- 模块 -->
+
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+

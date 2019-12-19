@@ -1,0 +1,150 @@
+﻿@{
+    Page.CheckApp = false;
+    ViewBag.Title = "RestReport";
+    string  query = string.Format("appid={0}&tabid={1}", Request.QueryString["appid"], Request.QueryString["tabid"]);
+}
+@model IEnumerable<Data.Model.Reports >
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+<link type="text/css" href="../../manage/Style/InterFace.Css" rel="stylesheet" rev="stylesheet" media="all" />
+<link type="text/css" href="../../manage/style.css" rel="stylesheet" rev="stylesheet" media="all" />
+<script type="text/javascript" src="../../js/jquery.js"></script>
+<script type="text/javascript" src="../../manage/include/common.js"></script>
+<script type="text/javascript" src="../../Scripts/FlowRun/common.js"></script>
+
+<script type="text/javascript">
+    var win = new RoadUI.Window();
+    var validate = new RoadUI.Validate();
+  
+    var iframeid = '@Request.QueryString["tabid"]';
+ 
+    var appid = '@Request.QueryString["appid"]';
+    
+   
+    var query = '@Html.Raw(query)';
+</script>
+<body>
+
+    <form action="" method="post">
+        @Html.AntiForgeryToken()
+        <div id="interface_inside">
+            <div id="interface_quick">
+                <div class="interface_quick_left">您现在的操作 >> 报表模块 >> 请假报表</div>
+                <div class="interface_quick_right">
+                    <a href="javascript:void(0)" onclick="javascript:window.location.replace(window.location.href);"><img style="vertical-align:middle;" src="../../manage/images/reload.png" /><strong>刷新</strong></a>
+                    &nbsp; &nbsp;
+                    <a href="javascript:history.back();"><img style="vertical-align:middle;" src="../../manage/images/ico_up1.gif" /><strong>后退</strong></a>
+                </div>
+                <div class="clearboth"></div>
+            </div>
+            <div id="interface_main">
+                <div id="tabs_config" class="tabsbox">
+
+                    <div class="clearboth"></div>
+
+                    <div class="toolbar" style="margin-top:0; border-top:none 0; position:fixed; top:0; left:0; right:0; margin-left:auto; z-index:999; width:100%; margin-right:auto; height:26px;">
+                        <div>
+                           
+                            <a href="#" onclick="fun_29b358e1ad644f09846c4554ae6b85c4();return false;" title="打印当前表单">
+                                <span style="background:url(/Images/ico/printer.gif) no-repeat left center;">打印</span>
+                            </a>
+                            <script type="text/javascript">
+                                function fun_29b358e1ad644f09846c4554ae6b85c4() { formPrint(); }
+                            </script>
+                          
+                        </div>
+                    </div>
+
+                    <!-- 模块 -->
+
+                    <table style=" width:100%;" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>
+                                开始时间：<input type="text" name="starttime" id="starttime" value=" " class="mycalendar">至
+                                结束时间：<input type="text" name="endtime" id="endtime" value=" " class="mycalendar">
+
+                                <input type="submit" value="查询" name="Save">
+                                <input type="submit" value="导出" name="Import">
+                                <div id="form_body_div" class="tabs_wrapper">
+                                    <div class="tabs_main" align="left">
+                                        <div id="PanelConfig">
+                                            <div id="PanelDefault">
+
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+
+
+                                                            <td width="150">部门名称</td>
+                                                            <td width="100">人员</td>
+                                                            <td width="75">事假</td>
+                                                            <td width="75">婚假</td>
+                                                            <td width="75">病假</td>
+                                                            <td width="75">产假</td>
+                                                            <td width="75">陪护假</td>
+                                                            <td width="75">年假</td>
+                                                            <td width="75">探亲假</td>
+                                                            <td width="75">上年度公休假</td>
+                                                            <td width="75">公休假</td>
+                                                            <td width="75">调休假</td>
+                                                            <td width="75">上年度公休剩余假</td>
+                                                            <td width="75">公休剩余假</td>
+                                                            <td width="75">调休剩余假</td>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var restreports in Model)
+                                                        {
+
+                                                            <tr>
+
+                                                                <td>@restreports.DeptName</td>
+                                                                <td>@restreports.UserName</td>
+                                                                <td>@restreports.AffairDays</td>
+                                                                <td>@restreports.WeddingDays</td>
+                                                                <td>@restreports.SickDays</td>
+                                                                <td>@restreports.MaternityDays</td>
+                                                                <td>@restreports.ChaperonageDays</td>
+                                                                <td>@restreports.YearDays</td>
+                                                                <td>@restreports.HomeDays</td>
+                                                                <td>@restreports.LastPublicDays</td>
+                                                                <td>@restreports.PublicDays</td>
+                                                                <td>@restreports.RestDays</td>
+                                                                <td>@restreports.subLastPublicDate</td>
+                                                                <td>@restreports.subPublicDate</td>
+                                                                <td>@restreports.subRestDate</td>
+
+
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+
+                                                </table>
+
+                                                <table class="table">
+                                                    <tr>
+                                                        <td class="page">
+                                                            <span style="float:left;" id=num></span>
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                                <br />
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <!-- 模块 -->
+
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+

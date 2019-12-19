@@ -1,0 +1,251 @@
+﻿@{
+    ViewBag.Title = "邮件收件箱查看列表";
+    Business.Platform.Dictionary BDictionary = new Business.Platform.Dictionary();
+    Business.Platform.Mail email = new Business.Platform.Mail();
+    Business.Platform.Mails_Detail emaildetail = new Business.Platform.Mails_Detail();
+    var id = Request.QueryString["id"];
+    var objmail = email.Get(Convert.ToInt32(id));
+    var mailid = objmail.did;
+    var objmaildetail = emaildetail.Get(Convert.ToInt32(mailid));
+
+
+    Business.Platform.Users BUser = new Business.Platform.Users();
+    Business.Platform.WorkGroup bworkgroup = new Business.Platform.WorkGroup();
+
+    Business.Platform.UsersRelation brelation = new Business.Platform.UsersRelation();
+    List<Data.Model.UsersRelation> lstrelation = new List<Data.Model.UsersRelation>();
+    Business.Platform.Organize borganize = new Business.Platform.Organize();
+    }
+
+
+    <link type="text/css" href="/manage/Style/InterFace.Css" rel="stylesheet" rev="stylesheet" media="all" />
+    <link type="text/css" href="/manage/style.css" rel="stylesheet" rev="stylesheet" media="all" />
+    <script type="text/javascript" src="/js/jquery.js"></script>
+    <script type="text/javascript" src="/manage/include/common.js"></script>
+   
+<html>
+<body>
+    <form id="form1">
+        <div id="interface_inside">
+            <div id="interface_quick">
+                <div class="interface_quick_left">您现在的操作 >> 查阅邮件内容</div>
+                <div class="interface_quick_right">
+                    <a href="javascript:void(0)" onclick="javascript:window.location.replace(window.location.href);"><img style="vertical-align:middle;" src="/manage/images/reload.png" /><strong>刷新</strong></a>
+                    &nbsp; &nbsp;
+                    <a href="javascript:history.back();"><img style="vertical-align:middle;" src="/manage/images/ico_up1.gif" /><strong>后退</strong></a>
+                </div>
+                <div class="clearboth"></div>
+            </div>
+            <div id="interface_main">
+                <div id="tabs_config" class="tabsbox">
+
+                    <div class="clearboth"></div>
+
+
+                    <!-- 模块 -->
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>
+
+                                <div id="config_basic1" class="tabs_wrapper">
+                                    <div class="tabs_main" align="left">
+                                        <div id="PanelConfig">
+
+                                            <table class="table subsubmenu">
+                                                <thead>
+                                                    <tr>
+                                                        <td>
+                                                           
+                                                           
+                                                            <a href="Mail_Manage?appid=e12da841-fcdd-4ab2-867a-2c31aa0a431a&id=@objmail.id&type=1">回复邮件</a>
+                                                            <a href="Mail_Manage?appid=e12da841-fcdd-4ab2-867a-2c31aa0a431a&id=@objmail.id&type=2">转发邮件</a>
+                                                        </td>
+                                                        <td style="text-align:right"></td>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                            <br />
+
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <td style="width:10px;"></td>
+                                                        <td><span style="color:#ff0000;font-size:12pt; font-weight:bolder;" id=Subject>
+                                                                @objmail.Subject
+                                                        </span></td>
+                                                    </tr>
+                                                </thead>
+                                                <tr>
+                                                    <th style="width:10px;"></th>
+                                                    <td style="color:#333333">
+                                                        <span style="font-weight:bold; color:#006600;">发件人</span>：<span  id=Sender style="font-weight:bold;"></span>@BUser.Get(objmail.SenderIDs.ToGuid()).Name
+                                                       
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <th style="width:10px;"></th>
+                                                    <td style="color:#333333">
+                                                        <span style="font-weight:bold; color:#006600;">收件人</span>：<span id=Sender style="font-weight:bold;"></span> 
+                                                        @{
+                                                            string[] lstreceiver = objmaildetail.ReceiveIDs.Split(',');
+                                                            string name = string.Empty;
+                                                            string receiverid=string.Empty;
+                                                            foreach (var receiver in lstreceiver)
+                                                            {
+                                                                if (receiver.Substring(0, 2) == "u_")
+                                                                {
+                                                                    receiverid = receiver.Substring(2);
+                                                                    name = name + BUser.Get(receiverid.ToGuid()).Name + ";";
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (receiver.Substring(0, 2) == "w_")
+                                                                    {
+                                                                        Data.Model.WorkGroup wg = bworkgroup.Get(receiver.Substring(2).ToGuid());
+                                                                        name = name + wg.Name + ";";
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        receiverid = receiver;
+
+
+                                                                        if (BUser.Get(receiverid.ToGuid()) == null)
+                                                                        {
+                                                                            if (borganize.Get(receiverid.ToGuid()) == null)
+                                                                            {
+                                                                                continue;
+
+                                                                            }
+                                                                            else
+                                                                            {
+
+                                                                                lstrelation = brelation.GetAllByOrganizeID(receiverid.ToGuid());
+                                                                                foreach (var m in lstrelation)
+                                                                                {
+                                                                                    if (BUser.Get(m.UserID) == null)
+                                                                                    {
+                                                                                        continue;
+                                                                                    }
+                                                                                    name = name + BUser.Get(m.UserID).Name + ";";
+                                                                                }
+
+                                                                            }
+
+
+
+
+                                                                        }
+                                                                        else
+                                                                        {
+
+                                                                            name = name + BUser.Get(receiverid.ToGuid()).Name + ";";
+                                                                        }
+                                                                        
+                                                                        
+                                                                        
+                                                                    }
+                                                                   // receiverid = receiver;
+                                                                }
+                                                               // name = name + BUser.Get(receiverid.ToGuid()).Name+";";
+                                                            }
+                                                             @name
+                                                        }
+                                                       
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <th style="width:10px;"></th>
+                                                    <td style="color:#333333">
+                                                        <span style="font-weight:bold; color:#006600;">抄送</span>：<span id=Sender style="font-weight:bold;"></span> 
+                                                        @{
+                                                            
+                                                            if (!string.IsNullOrEmpty(objmaildetail.CcIDs))
+                                                            {
+                                                                string[] lstCCIDs = objmaildetail.CcIDs.Trim().Split(',');
+                                                                string CCID = string.Empty;
+                                                                string Ccsid = string.Empty;
+                                                                foreach (var ccid in lstCCIDs)
+                                                                {
+                                                                    if (ccid.Substring(0, 2) == "u_")
+                                                                    {
+                                                                        Ccsid = ccid.Substring(2);
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        Ccsid = ccid;
+                                                                    
+                                                                    }
+                                                                    CCID = CCID + BUser.Get(Ccsid.ToGuid()).Name+";";
+                                                                }
+                                                                 @CCID
+                                                            }
+                                                            
+
+                                                        }
+                                                       
+                                                        
+                                                       
+                                                    </td>
+                                                </tr>
+
+                                              
+
+                                                <tr>
+                                                    <th style="width:10px;"></th>
+                                                    <td>
+                                                        <span style="font-weight:bold; color:#006600;">正 &nbsp;&nbsp;&nbsp;文</span>：
+                                                        <div  id=bodys style="min-height:135px;_height:135px;margin:10px 10px 1px 1px; border:1px solid #E3E197; padding:10px 10px 10px 10px; background-color: #FFFFDD;">
+
+                                                            @Html.Raw(objmaildetail.Bodys)
+                                                        </div>
+                                                       
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <th style="width:10px;"></th>
+                                                    <td>
+                                                        <span style="font-weight:bold; color:#006600;">附件</span>：
+                                                        @{
+                                                            if (!string.IsNullOrEmpty(objmaildetail.Attachments))
+                                                            {
+                                                                if (objmaildetail.Attachments.Split('|').Length > 0)
+                                                                {
+                                                                    string[] arrfilepath = objmaildetail.Attachments.Split('|');
+                                                                    for (int i = 0; i < arrfilepath.Length; i++)
+                                                                    {
+                                                                        <a href="@arrfilepath[i]" target="_blank" class="blue">@arrfilepath[i].Substring(@arrfilepath[i].LastIndexOf('/') + 1)</a><br>
+                                                                    }
+
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a href="@objmaildetail.Attachments" target="_blank" class="blue">@objmaildetail.Attachments.Substring(@objmaildetail.Attachments.LastIndexOf('/') + 1)</a>
+                                                                }
+                                                            }
+
+                                                        }
+                                                        
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- 模块 -->
+
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+

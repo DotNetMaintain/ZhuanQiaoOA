@@ -1,0 +1,25 @@
+a {color:#222;text-decoration:none;font-weight:bold;}
+a:hover { color:#ff0000; text-decoration:underline;}
+BODY {MARGIN: 0px; font:9pt Arial, "ËÎÌו", Verdana, sans-serif;
+background: #ffffff;}
+.tdbg {
+	BACKGROUND: #80b4cf; FONT-SIZE: 12px
+}
+.divv {MARGIN: 8px auto; WIDTH: 99%}
+.divv table td {margin-left:10px;}
+.tx {background:#fff;BORDER-BOTTOM: #bbdde5 1px solid;BORDER-LEFT: #bbdde5 1px solid;BORDER-TOP: #bbdde5 1px solid; BORDER-RIGHT: #bbdde5 1px solid;}
+
+#marqueeBox {
+	BORDER-BOTTOM: silver 1px solid; TEXT-ALIGN: center; BORDER-LEFT: silver 1px solid; PADDING-BOTTOM: 1px; MARGIN: 0px auto; PADDING-LEFT: 1px; PADDING-RIGHT: 1px; BACKGROUND: #f7f7f7; BORDER-TOP: silver 1px solid; BORDER-RIGHT: silver 1px solid; PADDING-TOP: 1px
+}
+.t2
+{
+ border-top:1px dashed #ccc
+}
+.info1 {
+	BACKGROUND-COLOR: #eff7fb
+}
+.info2 {
+	BACKGROUND-COLOR: #83b1ca
+}
+

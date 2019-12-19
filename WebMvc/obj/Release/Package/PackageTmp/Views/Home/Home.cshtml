@@ -1,0 +1,552 @@
+﻿@{
+    Page.CheckApp = false;
+    ViewBag.Title = "我的桌面";
+
+    Business.Platform.NoteBook bnotebook = new Business.Platform.NoteBook();
+    Business.Platform.Organize borganize = new Business.Platform.Organize();
+
+
+    List<Data.Model.NoteBook> lstnotebook1 = new List<Data.Model.NoteBook>();
+
+    List<Data.Model.NoteBook> lstnotebook = bnotebook.GetAll();
+
+    foreach (var notebooks in lstnotebook)
+    {
+        List<Data.Model.Users> lstuser = borganize.GetAllUsers(notebooks.UserID);
+        if (lstuser.Count > 0)
+        {
+            foreach (var users in lstuser)
+            {
+                if (users.ID == Business.Platform.Users.CurrentUserID)
+                {
+                    lstnotebook1.Add(notebooks);
+                }
+            }
+
+        }
+
+
+
+    }
+    if (lstnotebook1.Count > 5)
+    {
+        lstnotebook1 = lstnotebook1.GetRange(0, 5);
+    }
+
+
+
+
+    Business.Platform.WorkFlowTask bworkFlowTask = new Business.Platform.WorkFlowTask();
+    Business.Platform.WorkFlow bworkFlow = new Business.Platform.WorkFlow();
+
+    string title = "";
+    string flowid = "";
+    string sender = "";
+    string date1 = "";
+    string date2 = "";
+
+
+    title = Request.QueryString["title"];
+    flowid = Request.QueryString["flowid"];
+    sender = Request.QueryString["sender"];
+    date1 = Request.QueryString["date1"];
+    date2 = Request.QueryString["date2"];
+
+    ViewBag.title = title;
+    ViewBag.flowid = flowid;
+    ViewBag.sender = sender;
+    ViewBag.date1 = date1;
+    ViewBag.date2 = date2;
+
+    string query = string.Format("&appid={0}&tabid={1}&title={2}&flowid={3}&sender={4}&date1={5}&date2={6}",
+        Request.QueryString["appid"], Request.QueryString["tabid"], title.UrlEncode(), flowid, sender, date1, date2);
+    string pager;
+
+    var taskList = bworkFlowTask.GetTasks(Business.Platform.Users.CurrentUserID,
+       out pager, query, title, flowid, sender, date1, date2);
+    var taskListCount = taskList.Count;
+    if (taskList.Count > 5)
+    { taskList = taskList.GetRange(0, 5); }
+
+    ViewBag.query = query;
+    ViewBag.flowOptions = bworkFlow.GetOptions(flowid);
+
+
+    List<Data.Model.WorkFlowTask> taskListfind = taskList.FindAll(p => p.Status == 0);
+
+
+
+    Business.Platform.StickyNotes bsticdynotes = new Business.Platform.StickyNotes();
+    List<Data.Model.StickyNotes> lststicdynotes1 = new List<Data.Model.StickyNotes>();
+
+    List<Data.Model.StickyNotes> lststicdynotes = bsticdynotes.GetAll();
+
+    foreach (var sticdynotes in lststicdynotes)
+    {
+
+        if (sticdynotes.UserID == Business.Platform.Users.CurrentUserID.ToString())
+        {
+            lststicdynotes1.Add(sticdynotes);
+        }
+
+
+    }
+
+    if (lststicdynotes1.Count > 5)
+    {
+        lststicdynotes1 = lststicdynotes1.GetRange(0, 5);
+    }
+
+
+    Business.Platform.Meeting bmeeting = new Business.Platform.Meeting();
+
+    List<Data.Model.Meeting> lstmeeting = bmeeting.GetAll();
+
+
+    if (lstmeeting.Count > 5)
+    {
+        lstmeeting = lstmeeting.GetRange(0, 5);
+    }
+
+    int i = 0;    //i为新闻列表的计数
+    int j = 0;    //j为政策列表的计数
+
+
+    Business.Platform.Read_Log rl = new Business.Platform.Read_Log();
+
+    //  int unread = Convert.ToInt32(Model.Count) - @Convert.ToInt32(rl.GetCount());
+
+
+    int unread = 0;
+
+    foreach (var readmodel in Model)
+    {
+        if (!rl.HasRead(readmodel.id.ToString(), Business.Platform.Users.CurrentUserID.ToString(), "9c92a09f-c9fa-4073-85cb-6fd62c0550dd"))
+        {
+            unread = unread + 1;
+        }
+
+
+    }
+
+
+    Business.Platform.Mail bmails = new Business.Platform.Mail();
+    List<Data.Model.Mails> lstmails = bmails.GetAccount(out pager,Business.Platform.Users.CurrentUserID, 2,query);
+
+    if (lstmails.Count > 5)
+    {
+        lstmails = lstmails.GetRange(0, 5);
+    }
+
+    List<Data.Model.Mails> lstAllmails = bmails.GetAccount(out pager, Business.Platform.Users.CurrentUserID, 2, query);
+    List<Data.Model.Mails> mailListfind = lstAllmails.FindAll(p => p.IsRead == 0);
+
+    string status = string.Empty;
+     Business.Platform.PaperDownload bpaper = new Business.Platform.PaperDownload();
+     List<Data.Model.PaperDownload> lstPaper = bpaper.GetAll();
+     int unpaperread = 0;
+
+     foreach (var readpapermodel in lstPaper)
+     {
+         if (!rl.HasRead(readpapermodel.id.ToString(), Business.Platform.Users.CurrentUserID.ToString(), "b87551e6-bdcb-4ca4-b35e-23cf6ebfb056"))
+         {
+             unpaperread = unpaperread + 1;
+         }
+
+
+     }
+
+
+}
+@model List<Data.Model.NewsArticle>
+
+
+
+<meta http-equiv="refresh" content="360">
+<link rel=stylesheet type=text/css href="../../images/Info_aspx_files/css.css">
+<script type="text/javascript" src="../../js/jquery.js"></script>
+<script type="text/javascript" src="../../js/include/common.js"></script>
+<script type="text/javascript" src="../../js/FunctionJS.js"></script>
+<script type="text/javascript" src="../../js/popup/popup.js"></script>
+<script type="text/javascript">
+    function changePwd() {
+        var pop = new Popup({ contentType: 1, scrollType: 'yes', isReloadOnClose: false, width: 535, height: 300 });
+        pop.setContent("contentUrl", "/Manage/Common/User_PwdEdit.aspx");
+        pop.setContent("title", "个人密码修改");
+        pop.build();
+        pop.show();
+    }
+    function personView() {
+        var pop = new Popup({ contentType: 1, scrollType: 'yes', isReloadOnClose: false, width: 585, height: 465 });
+        pop.setContent("contentUrl", '/manage/Sys/User_View.aspx?uid=<%=Uid %>');
+        pop.setContent("title", "个人资料预览");
+        pop.build();
+        pop.show();
+    }
+</script>
+
+
+<body>
+
+    <div class='divv'>
+        <table style="MARGIN-TOP: 7px;" cellspacing=0 cellpadding=0 width="100%"
+               align=center>
+            <tbody>
+                <tr>
+                    <td valign=top height="50%">
+                        <table cellspacing=0 cellpadding=0 width="100%" align=center>
+                            <tbody>
+                                <tr style="height:50%">
+                                    <td valign=top width="50%">
+                                        <table class=tx border=0 cellspacing=0 cellpadding=0 width="98%" height="247px">
+                                            <tbody>
+                                                <tr>
+                                                    <td height=21 style="background: url(../../images/Info_aspx_files/link_3.gif);" width=7 nowrap>
+                                                        <div style="WIDTH: 7px"></div>
+                                                    </td>
+                                                    <td style="background: url(../../images/Info_aspx_files/linkbg2.gif); " width="100%">
+                                                        <span style="font-weight:bold; color:#ff0000;">&nbsp;我的资讯</span>
+                                                    </td>
+                                                    <td height=21 style="background: url(../../images/Info_aspx_files/link_4.gif ); "
+                                                        nowrap>
+                                                        <div style="WIDTH: 7px">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td style="background: url(../../images/Info_aspx_files/link_3_1.gif); "></td>
+                                                    <td>
+                                                        <table style="padding-left:4px;" border=0 cellspacing=0
+                                                               cellpadding=0 width="100%" align=center height="150">
+                                                            <tbody>
+
+                                                                <tr>
+                                                                    <td>
+
+                                                                        <table cellpadding="0" cellspacing="1" border="0" class="listtable">
+                                                                            <thead>
+                                                                                <tr>
+
+                                                                                    <th style="width:100px">资讯类型</th>
+                                                                                    <th style="width:200px">资讯标题</th>
+                                                                                    <th style="width:110px">发布时间</th>
+
+
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @foreach (var newslist in @Model)
+                                                                                {
+
+
+                                                                                    j = j + 1;
+                                                                                    if (j < 6)
+                                                                                    {
+                                                                                        <tr>
+
+
+                                                                                            <td style="width:100px">
+
+                                                                                                【<span style="font-weight:bold; color:#ff0000;">@newslist.TypeName</span>】
+
+                                                                                            </td>
+
+                                                                                            <td style="width:200px">
+                                                                                                <a href="javascript:void(0);" onclick="openPage('News/News_Detail?appid=9c92a09f-c9fa-4073-85cb-6fd62c0550dd&id=@newslist.id', '资讯查看', '9c92a09fc9fa407385cb6fd62c0550dd','@newslist.id','9c92a09f-c9fa-4073-85cb-6fd62c0550dd','@Business.Platform.Users.CurrentUserID.ToString()'); return false;" class="blue">@newslist.NewsTitle</a>
+                                                                                            </td>
+                                                                                            <td style="width:110px">@Convert.ToDateTime(newslist.AddTime).ToShortDateString()</td>
+
+                                                                                        </tr>
+                                                                                    }
+
+                                                                                }
+                                                                            </tbody>
+                                                                        </table>
+
+
+
+
+
+                                                                    </td>
+                                                                </tr>
+
+
+                                                                <tr>
+                                                                    <td align="right" class="t2">
+                                                                        <span style="margin-right:15px; "><a href="javascript:void(0);" onclick="openTask('News', '通知公告列表', '通知公告列表'); return false;">更多资讯</a></span>
+                                                                    </td>
+                                                                </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                    <td style="background: url(../../images/Info_aspx_files/link_4_1.gif);"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class=info2 height=1 colspan=3>
+                                                        <img src="../../images/Info_aspx_files/a.gif" width=1
+                                                             height=1>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                    <td valign=top width="50%">
+                                        <table class=tx border=0 cellspacing=0 cellpadding=0 style="width:98%;height:247px">
+                                            <tbody>
+                                                <tr>
+                                                    <td height=21 style="background: url(../../images/Info_aspx_files/link_3.gif);" width=7
+                                                        nowrap>
+                                                        <div style="WIDTH: 7px"></div>
+                                                    </td>
+                                                    <td style="background: url(../../images/Info_aspx_files/linkbg2.gif);" width="100%">
+                                                        <span style="font-weight:bold; color:#ff0000;">&nbsp;统计信息 </span>
+                                                    </td>
+                                                    <td height=21 style="background: url(../../images/Info_aspx_files/link_4.gif); " width=7
+                                                        nowrap>
+                                                        <div style="WIDTH: 7px"></div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="background: url(../../images/Info_aspx_files/link_3_1.gif);"></td>
+                                                    <td>
+                                                        <table style="padding-left:4px;" border=0 cellspacing=0
+                                                               cellpadding=0 width="100%" height="150">
+                                                            <tbody>
+
+                                                                <tr class="t2">
+                                                                    <td>[我的资讯：@Model.Count 条，<a href="javascript:void(0);" onclick="openTask('News?status=0', '通知公告列表', '通知公告列表'); return false;"><span style="color:red">@unread</span></a> 条未读] </td>
+                                                                </tr>
+                                                                <tr class="t2">
+                                                                    @if (taskList.Count == 0)
+                                                                    {
+                                                                        <td>[我的邮件：0条，0条未读] </td>
+                                                                    }
+                                                                    else
+                                                                    {
+
+                                                                        <td>[我的邮件： @lstAllmails.Count 条， <span style="color:red"><a href="" onclick="openTask('Mail/Mail_List?status=0&FoldType=2&appid=322af644-c099-448c-9c94-bf920cb92bbc&tabid=tab_322af644c099448c9c94bf920cb92bbc', '邮件列表', '邮件列表'); return false;" style="color:red">@mailListfind.Count</a></span> 条未读] </td>
+                                                                    }
+
+                                                                </tr>
+                                                                <tr class="t2">
+                                                                    <td>[电子表格：<a href="javascript:void(0);" onclick="openTask('Paper?appid=a08455fc-ab6a-4518-ae66-f1e83ed3e8aa&tabid=tab_a08455fcab6a4518ae66f1e83ed3e8aa', '电子表格列表', '电子表格列表'); return false;"><span style="color:red">@lstPaper.Count</span></a> 条，   <a href="javascript:void(0);" onclick="openTask('Paper?status=0&appid=a08455fc-ab6a-4518-ae66-f1e83ed3e8aa&tabid=tab_a08455fcab6a4518ae66f1e83ed3e8aa', '电子表格列表', '电子表格列表'); return false;"><span style="color:red">@unpaperread</span></a>条未读]  </td>
+                                                                </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                    <td style="background: url(../../images/Info_aspx_files/link_4_1.gif);"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class=info2 height=1 colspan=3>
+                                                        <img src="../../images/Info_aspx_files/a.gif" width=1
+                                                             height=1>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td height=8 colspan=2></td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" width="50%" height="50%">
+
+                                        <table class=tx border=0 cellspacing=0 cellpadding=0 width="98%">
+                                            <tbody>
+                                                <tr>
+                                                    <td height=21 style="background: url(../../images/Info_aspx_files/link_3.gif); " width=7
+                                                        nowrap>
+                                                        <div style="WIDTH: 7px"></div>
+                                                    </td>
+                                                    <td style="background: url(../../images/Info_aspx_files/linkbg2.gif);" width="100%">
+                                                        <span style="font-weight:bold; color:#ff0000;">&nbsp;邮件列表</span>
+                                                    </td>
+                                                    <td height=21 style="background: url(../../images/Info_aspx_files/link_4.gif);" width=7
+                                                        nowrap>
+                                                        <div style="WIDTH: 7px"></div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="background: url(../../images/Info_aspx_files/link_3_1.gif);">
+                                                        <div style="HEIGHT: 1px"></div>
+                                                    </td>
+                                                    <td valign=top>
+                                                        <table style="padding-left:4px;" border=0 cellspacing=0
+                                                               cellpadding=0 width="100%" align="center" height="220">
+                                                            <tbody>
+
+                                                                <tr>
+                                                                    <td>
+                                                                        <table cellpadding="0" cellspacing="1" border="0" class="listtable">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>邮件标题</th>
+                                                                                    <th>接收时间</th>
+                                                                                    <th>状态</th>
+
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+
+                                                                                @foreach (var task in @lstmails)
+                                                                                {
+
+
+
+                                                                                    <tr>
+
+                                                                                        <td width="250px"><a href="javascript:void(0);" onclick="openMailPage('Mail/Mail_View?appid=40ece51d-4aaa-4a24-93d2-454c5d66323e&tabid=tab_40ece51d4aaa4a2493d2454c5d66323e&id=@task.id', '邮件查看', '40ece51d-4aaa-4a24-93d2-454c5d66323e','@task.id','40ece51d4aaa4a2493d2454c5d66323e','@Business.Platform.Users.CurrentUserID.ToString()'); return false;" class="blue">@task.Subject</a></td>
+                                                                                        <td>@Convert.ToDateTime(task.SendTime).ToShortDateString()</td>
+                                                                                        <td>
+                                                                                            @{
+                                                                                    if (task.IsRead == 0)
+                                                                                    {
+                                                                                        status = "<span style='color:red'>未读</span>";
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        status = "已读";
+                                                                                    }
+                                                                                    @Html.Raw(status)
+                                                                                            }
+                                                                                        </td>
+
+
+
+                                                                                    </tr>
+                                                                                }
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+
+
+
+                                                                <tr>
+                                                                    <td align="right" class="t2">
+                                                                        <span style="margin-right:15px; "><a href="javascript:void(0);" onclick="openTask('Mail/Mail_List?FoldType=2&appid=322af644-c099-448c-9c94-bf920cb92bbc&tabid=tab_322af644c099448c9c94bf920cb92bbc', '邮件列表', '邮件列表'); return false;">更多资讯</a></span>
+                                                                    </td>
+                                                                </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                    <td style="background: url(../../images/Info_aspx_files/link_4_1.gif);"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class=info2 height=1 colspan=3>
+                                                        <img src="../../images/Info_aspx_files/a.gif" width=1
+                                                             height=1>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+
+
+
+
+                                    </td>
+
+                                    <td valign="top" width="50%" height="50%">
+                                        <table class=tx border=0 cellspacing=0 cellpadding=0 width="98%" height="220">
+                                            <tbody>
+                                                <tr>
+                                                    <td height=21 style="background: url(../../images/Info_aspx_files/link_3.gif);" width=7
+                                                        nowrap>
+                                                        <div style="WIDTH: 7px"></div>
+                                                    </td>
+                                                    <td style="background: url(../../images/Info_aspx_files/linkbg2.gif);" width="100%">
+                                                        <span style="font-weight:bold; color:#ff0000;">&nbsp;会议通知</span>
+                                                    </td>
+                                                    <td height=21 style="background: url(../../images/Info_aspx_files/link_4.gif);" width=7
+                                                        nowrap>
+                                                        <div style="WIDTH: 7px"></div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="background: url(../../images/Info_aspx_files/link_3_1.gif);"></td>
+                                                    <td valign=top>
+                                                        <table style="padding-left:4px;" border=0 cellspacing=0
+                                                               cellpadding=0 width="100%" align=center height="220">
+                                                            <tbody>
+                                                                @foreach (var meetings in @lstmeeting)
+                                                                {
+
+                                                                    <tr>
+                                                                        <td>【<span style="font-weight:bold; color:#ff0000;">会议主题:<a href="javascript:void(0);" onclick="openPage('Meeting/Meeting_View?appid=7ee3eef0-d07b-4c2e-91a5-728996fc9cdf&tabid=tab_7ee3eef0d07b4c2e91a5728996fc9cdf&id=@meetings.id', '会议查看', '7ee3eef0d07b4c2e91a5728996fc9cdf','@meetings.id','7ee3eef0-d07b-4c2e-91a5-728996fc9cdf','@Business.Platform.Users.CurrentUserID.ToString()'); return false;" class="blue">@meetings.MainTopics</a></span>】 @meetings.AddTime </td>
+                                                                    </tr>
+
+                                                                }
+
+                                                                <tr>
+                                                                    <td align="right" class="t2">
+                                                                        <span style="margin-right:15px; "><a href="javascript:void(0);" onclick="openTask('Meeting', '会议安排', '会议安排'); return false;">更多资讯</a></span>
+                                                                    </td>
+                                                                </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                    <td style="background: url(../../images/Info_aspx_files/link_4_1.gif);"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class=info2 height=1 colspan=3>
+                                                        <img src="../../images/Info_aspx_files/a.gif" width=1
+                                                             height=1>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <script type="text/javascript">
+        function openTask(url, title, id) {
+            top.openApp(url, 0, title, "tab_" + id, 0, 0, false);
+        }
+        function detail(flowid, groupid) {
+            top.mainDialog.open({
+                url: 'WorkFlowTasks/Detail?flowid1=' + flowid + "&groupid=" + groupid + '@Html.Raw(ViewBag.query)',
+                width: 980, height: 530, title: "查看流程处理过程"
+            });
+        }
+
+        //function openPage(url, title, id) {
+        //    top.openApp(url, 0, title, id, 0, 0, false);
+        //}
+
+        function openPage(url, title, id, guid, table_name, userid) {
+            top.openApp(url, 0, title, id, 0, 0, false);
+            var para = "guid=" + guid + "&table_name=" + table_name + "&userid=" + userid;
+            deliveryConfig('../../Ajax/InsertReadLog.ashx', para);
+            // window.reload();
+        }
+
+
+        function openMailPage(url, title, id, guid, table_name, userid) {
+            top.openApp(url, 0, title, id, 0, 0, false);
+            var para = 'action= &key=' + guid + '&isread=1';
+            deliveryConfig('../../Ajax/UpdateMailType.ashx', para);
+            // window.reload();
+        }
+
+    </script>
+
+
+</body>

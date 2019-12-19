@@ -1,0 +1,166 @@
+﻿@{
+    ViewBag.Title = "Login";
+    Page.CheckApp = false;
+}
+
+<form method="post" id="form1">
+<br />
+<input type="hidden" id="Force" name="Force" value="0" />
+<div>
+    <table border=0 cellspacing=0 cellpadding=0 style="width:100%;height:100%">
+        <tbody>
+            <tr style="height:15%;">
+                <td  valign=top style="background:url(../images/login/index_3.gif); height:15%;">
+                    <table border=0 cellspacing=0 cellpadding=0 style="width:100%; height:100% " >
+                        <tbody>
+                            <tr>
+                                <td valign=top rowspan=2 width=289></td>
+                                <td class=cc03 height=2></td>
+                            </tr>
+                            <tr>
+                                <td height=67 valign=bottom></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr style="height:90%;">
+                <td class=cc01 valign=top align=center >
+                    <table border=0 cellspacing=0 cellpadding=0 width=700 align=center
+                           style="height:100%;">
+                        <tbody>
+                            <tr>
+                                <td height=125>&nbsp;</td>
+                                <td class=cc05 rowspan=2 width=2></td>
+                                <td height=125>&nbsp;</td>
+                            </tr>
+                            <tr style="height:100%">
+                                <td style="BACKGROUND: url(../images/login/logo.jpg) no-repeat right top" height=285 valign=top width=319></td>
+                                <td valign=top style='BORDER-LEFT: dotted thin #cccccc;'>
+                                    <table class=cc06 border=0 cellspacing=0 cellpadding=0 style="height:100% ">
+                                        <tbody>
+                                            <tr>
+                                                <td height=30 width=53>帐号：</td>
+                                                <td colspan=2>
+                                                    <input id="Account" name="Account" value='' style="color:#ff0000; font-weight:bold; padding-left:5px; width:125px; height:25px; vertical-align:middle;" type="text" maxlength=16 />
+                                                    <img src="../images/login/ico_user.gif" width="19" height="18">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td height=30>密 码：</td>
+                                                <td colspan=2>
+                                                    <input type="password" value='' style="color:#ff0000; font-weight:bold; padding-left:5px; width:125px; height:25px; vertical-align:middle;" id="Password" name="Password" maxlength=16 />
+                                                    <img src="../images/login/luck.gif" width="19" height="18">
+                                                </td>
+                                            </tr>
+
+
+                                            <tr>
+                                                <td height=60>&nbsp;</td>
+                                                <td colspan=" 2">
+                                                    <input type="submit" value="确认登录" class="mybutton" onclick="return checkForm();" />
+                                                </td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="bottom" colspan=3 align="center">
+                                    <table class=cc11 border=0 cellspacing=0 cellpadding=0
+                                           style="width:70%; height :100%">
+                                        <tbody>
+                                            <tr>
+                                                <td height=50 colspan=2>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="8%" align=right>
+                                                    <img src="../images/login/ico_settings.gif" width="18" height="18">
+                                                </td>
+                                                <td class=cc09 width="92%">
+                                                    &nbsp; &nbsp; <a href="guide.zip" target=_blank class="left_txt3"><span style="font-weight:bold; color:#ff0000">用户使用培训手册(点击下载)</span></a>
+                                                    - (推荐1024*768以上分辨率)
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td height=1
+                                                    colspan=2>
+                                                    &nbsp;
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr style="height:5%;">
+                <td height=24 valign=top style=" background: url(../images/login/index_15.gif);">
+                    <table border=0 cellspacing=0 cellpadding=0 style="width:100%;" align=center>
+                        <tbody>
+                            <tr>
+                                <td class=cc02 height=2 valign=top></td>
+                            </tr>
+                            <tr>
+                                <td class=aa13 height=24 align="center">
+                                    Copyright © &nbsp;<span style="font-weight:bold;">&nbsp;<a class="aaa" href='http://www.zhishunltd.com' target=_blank>上海智顺科技有限公司</a> &nbsp; </span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>   
+
+</div>
+
+
+
+
+</form>
+<script type="text/javascript">
+    var isVcode = '1' == '@Session[ViewBag.IsVcodeSessionKey]';
+    $(function ()
+    {
+        //if (isVcode)
+        //{
+        //    top.win.resize(300, 230);
+        //    $("#novcode").show();
+        //}
+        @Html.Raw(ViewBag.ErrMsg)
+        @Html.Raw(ViewBag.Forcescript)
+    });
+    function checkForm()
+    {
+        var form1 = document.forms[0];
+        if ($.trim(form1.Account.value).length == 0)
+        {
+            alert("帐号不能为空!");
+            form1.Account.focus();
+            return false;
+        }
+        if ($.trim(form1.Password.value).length == 0)
+        {
+            alert("密码不能为空!");
+            form1.Password.focus();
+            return false;
+        }
+        //if (isVcode && form1.VCode && $.trim(form1.VCode.value).length == 0)
+        //{
+        //    alert("验证码不能为空!");
+        //    form1.VCode.focus();
+        //    return false;
+        //}
+        return true;
+    }
+    function cngimg()
+    {
+        $('#VcodeImg').attr('src', 'VCode?' + new Date().toString());
+    }
+</script>

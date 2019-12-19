@@ -1,0 +1,35 @@
+/* 通用空白间距 */
+.blank3{ height:3px; font-size:1px; width:100%; clear:both; overflow:hidden;}
+.blank6{ height:6px; font-size:1px; width:100%; clear:both;overflow:hidden;}
+.blank9{ height:9px; font-size:1px; width:100%; clear:both;overflow:hidden;}
+.blank12{ height:13px; font-size:1px; width:100%; clear:both;overflow:hidden;}
+.blank9w{ height:9px; font-size:1px; width:100%;  clear:both; background:#fff;overflow:hidden;}
+.blank15{ height:15px; font-size:1px; width:100%; clear:both;overflow:hidden;}
+.blank20{ height:20px; font-size:1px; width:100%; clear:both;overflow:hidden;}
+.clear{ clear: both; font-size:1px; width:1px; height:0px; overflow:hidden; visibility: hidden; }
+
+.col2{width:183px; border-bottom:1px solid #ccc; float:left; overflow:hidden;background:#f00 url(rightbg.gif) repeat-y left top}
+.col2 .rightcol{ width:185px; margin:-1px -1px 0 -1px;*margin:0;float:left; background:url(rightbgt.gif) no-repeat left top}
+
+/*菜单切换*/
+.tabBox {padding:0 16px; clear:both;}
+.tabBox .tab{font-size:13px}
+.tabBox .tab li {float:left; color:#1F3A87; line-height:26px; text-align:center;}
+.tabBox .tab li a:link, .dairy .tab li a:visited {color:#1F3A87;}
+.tabBox .tab li.active {font-weight:bold;}
+
+.tabLuck{ width:183px; float:left;padding:0 0 0 9px;}
+.tabLuck .tab{ float:left; width:44px; padding-top:3px;}
+.tabLuck .tab li{ float:none; background:url(http://www.gz35.com/tools/res/noonsrc/tab2off.gif) no-repeat; line-height:23px; height:23px; overflow:hidden; margin-bottom:2px;}
+.tabLuck .tab li.active{ background:url(http://www.gz35.com/tools/res/noonsrc/tab2on.gif) no-repeat left top; font-weight:400}
+.tabLuck .tab li.active a,.tabLuck .tab li.active a:visited{ color:#fff}
+.tabLuck .tabBoxContent{ float:left; width:121px; border:1px solid #555793;font-size:12px}
+.tabLuck .tabBoxContent .text{ width:119px; border:1px solid #fff; background:#fff url(http://www.gz35.com/tools/res/noonsrc/tablist.gif) repeat-x left top}
+.tabLuck .tabBoxContent .text li{ width:56px; margin:0; padding:0; padding-left:2px; text-align:center;float:left; line-height:25px;}
+.tabLuck select,.tabLuck .bt{font-size:13px; padding:0}
+.tabBox .tab,.tabLuck .tabBoxContent ul{margin:0; padding:0; list-style:none}
+
+.formlist{ text-align:left; font-size:13px; color:#000}
+.rightTi{ text-align:left; margin:0 8px}
+.rightTi img{ border:0}
+.rightTi h3{ margin:0; padding:0; font-size:14px}

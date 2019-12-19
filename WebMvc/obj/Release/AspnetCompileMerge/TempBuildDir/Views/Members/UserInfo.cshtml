@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "UserInfo";
+ 
+}
+@model Data.Model.UsersInfo
+<script type="text/javascript">
+    var win = new RoadUI.Window();
+    var validate = new RoadUI.Validate();
+</script>
+<form action="" method="post">
+    @Html.AntiForgeryToken()
+    <br />
+    <table cellpadding="0" cellspacing="1" border="0" width="95%" class="formtable">
+        <tr>
+            <th style="width:80px;">电话：</th>
+            <td><input type="text" id="Tel" name="Tel" class="mytext" value="@Model.Tel"  max="50" style="width:160px;" /></td>
+        </tr>
+        <tr>
+            <th style="width:80px;">传真：</th>
+            <td><input type="text" id="Fax" name="Fax" class="mytext" value="@Model.Fax"  style="width:160px;" /></td>
+        </tr>
+        <tr>
+            <th style="width:80px;">地址：</th>
+            <td><input type="text" id="Address" name="Address" class="mytext" value="@Model.Address" style="width:160px;" /></td>
+        </tr>
+        <tr>
+            <th style="width:80px;">E-MAIL：</th>
+            <td><input type="text" id="Email" name="Email" class="mytext" value="@Model.Email" style="width:160px;" /></td>
+        </tr>
+        <tr>
+            <th style="width:80px;">QQ：</th>
+            <td><input type="text" id="QQ" name="QQ" class="mytext" value="@Model.QQ" style="width:160px;" /></td>
+        </tr>
+        <tr>
+            <th style="width:80px;">调休天数：</th>
+            <td><input type="text" id="RestDate" name="RestDate" class="mytext" value="@Model.RestDate" style="width:160px;" /></td>
+        </tr>
+        <tr>
+            <th style="width:80px;">上年度公休天数：</th>
+            <td><input type="text" id="PublicDate" name="LastPublicDate" class="mytext" value="@Model.LastPublicDate" style="width:160px;" /></td>
+        </tr>
+        <tr>
+            <th style="width:80px;">公休天数：</th>
+            <td><input type="text" id="PublicDate" name="PublicDate" class="mytext" value="@Model.PublicDate" style="width:160px;" /></td>
+        </tr>
+        
+
+    </table>
+
+    <div style="width:95%; margin:10px auto 10px auto; text-align:center;">
+       
+        <input type="submit" class="mybutton" name="Save" onclick="return validate.validateForm(document.forms[0]);" value="保存" />
+        
+    </div>
+
+
+</form>
+
+<script type="text/javascript">
+    $(function () {
+        @Html.Raw(ViewBag.Script)
+    });
+</script>

@@ -1,0 +1,134 @@
+﻿@{
+    Page.CheckApp = false;
+    ViewBag.Title = "MeetingList";
+    Business.Platform.Meeting bmeeting = new Business.Platform.Meeting();
+    Business.Platform.Organize borganize = new Business.Platform.Organize();
+
+
+    List<Data.Model.Meeting> lstmeeting = bmeeting.GetAll();
+    
+}
+
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+<link type="text/css" href="../../manage/Style/InterFace.Css" rel="stylesheet" rev="stylesheet" media="all" />
+<link type="text/css" href="../../manage/style.css" rel="stylesheet" rev="stylesheet" media="all" />
+<link rel=stylesheet type=text/css href="../../images/Info_aspx_files/css.css">
+<script type="text/javascript" src="../../js/jquery.js"></script>
+<script type="text/javascript" src="../../manage/include/common.js"></script>
+
+<script type="text/javascript">
+    function Delete(ID) {
+        if (confirm("确定要删除？")) {
+            url = "/Meeting/Delete";
+            parameter = { id: ID };
+            $.post(url, parameter, function (data) {
+                alert("删除成功！");
+                window.location = "/Meeting/MeetingList?appid=bbbc4652-ab44-4376-a946-c91eb8759d21&tabid=tab_bbbc4652ab444376a946c91eb8759d21";
+            });
+        }
+    }
+
+    </script>
+
+    <body>
+        <form id="form1">
+            <div id="interface_inside">
+                <div id="interface_quick">
+                    <div class="interface_quick_left">您现在的操作 >> 我的工具 >> 会议管理</div>
+                    <div class="interface_quick_right">
+                        <a href="javascript:void(0)" onclick="javascript:window.location.replace(window.location.href);"><img style="vertical-align:middle;" src="../../manage/images/reload.png" /><strong>刷新</strong></a>
+                        &nbsp; &nbsp;
+    <a href="javascript:history.back();"><img style="vertical-align:middle;" src="../../manage/images/ico_up1.gif" /><strong>后退</strong></a>
+</div>
+</div>
+<div class="clearboth"></div>
+</div>
+<div id="interface_main">
+    <div id="tabs_config" class="tabsbox">
+
+        <div class="clearboth"></div>
+
+
+        <!-- 模块 -->
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td>
+                    <div id="config_basic1" class="tabs_wrapper">
+                        <div class="tabs_main" align="left">
+                            <div id="PanelConfig">
+
+                                <table class="table subsubmenu">
+                                    <thead>
+
+                                    </thead>
+                                </table>
+                                <br />
+
+                                <div id="PanelDefault">
+
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <td width="30%">会议名称</td>
+                                                <td width="20%">会议时间</td>
+                                                <td width="20%">会议地点</td>
+                                                <td width="20%">附件</td>
+                                                <td>操作</td>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+
+                                            @foreach (var newslist in @lstmeeting)
+                                                    {
+                                                        string attachfile = string.Empty;
+                                                        if (newslist.Bodys != "")
+                                                        {
+                                                            attachfile = newslist.Bodys.Substring(newslist.Bodys.LastIndexOf('/') + 1, newslist.Bodys.LastIndexOf('.') - newslist.Bodys.LastIndexOf('/') - 1);
+                                                        }
+                                                        <tr>
+                                                    <td width="30%">@newslist.MainTopics</td>
+                                                    <td width="20%">@newslist.AddTime</td>
+                                                    <td width="20%">@newslist.Address</td>
+                                                    <td width="10%"><a href="@newslist.Bodys" target="_blank" class="blue"> @attachfile </a></td>
+                                                    <td><input type="submit" onclick="Delete(@newslist.id)" value="删除" /></td>
+                                                </tr>
+                                                    }
+
+
+                                        </tbody>
+
+                                    </table>
+
+                                    <table class="table">
+                                        <tr>
+                                            <td class="page">
+                                                <span style="float:left;" id=num></span>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+</tr>
+</table>
+
+<br />
+
+</div>
+
+</div>
+</div>
+</div>
+
+</td>
+</tr>
+</table>
+
+<!-- 模块 -->
+
+</div>
+</div>
+
+</form>
+</body>
+
+
+

@@ -1,0 +1,134 @@
+﻿@{
+    Page.CheckApp = false;
+    ViewBag.Title = "会议列表";
+}
+@model List<Data.Model.Meeting>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <link type="text/css" href="../../manage/Style/InterFace.Css" rel="stylesheet" rev="stylesheet" media="all" />
+    <link type="text/css" href="../../manage/style.css" rel="stylesheet" rev="stylesheet" media="all" />
+<link rel=stylesheet type=text/css href="../../images/Info_aspx_files/css.css">
+    <script type="text/javascript" src="../../js/jquery.js"></script>
+    <script type="text/javascript" src="../../manage/include/common.js"></script>
+<body>
+    <form id="form1" >
+        <div id="interface_inside">
+            <div id="interface_quick">
+                <div class="interface_quick_left">您现在的操作 >> 我的工具 >> 会议管理</div>
+                <div class="interface_quick_right">
+                    <a href="javascript:void(0)" onclick="javascript:window.location.replace(window.location.href);"><img style="vertical-align:middle;" src="../../manage/images/reload.png" /><strong>刷新</strong></a>
+                    &nbsp; &nbsp;
+                    <a href="javascript:history.back();"><img style="vertical-align:middle;" src="../../manage/images/ico_up1.gif" /><strong>后退</strong></a>
+                </div>
+            </div>
+            <div class="clearboth"></div>
+        </div>
+        <div id="interface_main">
+            <div id="tabs_config" class="tabsbox">
+
+                <div class="clearboth"></div>
+
+
+                <!-- 模块 -->
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td>
+                            <div id="config_basic1" class="tabs_wrapper">
+                                <div class="tabs_main" align="left">
+                                    <div id="PanelConfig">
+
+                                        <table class="table subsubmenu">
+                                            <thead>
+                                               
+                                            </thead>
+                                        </table>
+                                        <br />
+
+                                        <div id="PanelDefault">
+
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <td width="30%">会议名称</td>
+                                                        <td width="20%">会议时间</td>
+                                                        <td width="20%">会议地点</td>
+                                                        <td width="20%">附件</td>
+                                                    </tr>
+                                                </thead>
+
+                                               <tbody>
+
+                                                   @foreach (var newslist in @Model)
+                                                   {
+                                                       string attachfile = string.Empty;
+                                                        if (newslist.Bodys != "")
+                                                               {
+                                                                   attachfile=newslist.Bodys.Substring(newslist.Bodys.LastIndexOf('/') + 1, newslist.Bodys.LastIndexOf('.') - newslist.Bodys.LastIndexOf('/') - 1);
+                                                               }
+                                                       <tr>
+                                                           <td width="30%">@newslist.MainTopics</td>
+                                                           <td width="20%">@newslist.AddTime</td>
+                                                           <td width="20%">@newslist.Address</td>
+                                                           <td width="10%" ><a href="@newslist.Bodys" target="_blank" class="blue"> 
+                                                               @attachfile </a>
+                                                           
+                                                           
+                                                           @{
+                                                       if (!string.IsNullOrEmpty(attachfile))
+                                                       {
+                                                           if (attachfile.Split('|').Length > 0)
+                                                           {
+                                                               string[] arrfilepath = attachfile.Split('|');
+                                                               for (int i = 0; i < arrfilepath.Length; i++)
+                                                               {
+                                                                <a href="@arrfilepath[i]" target="_blank" class="blue">@arrfilepath[i].Substring(@arrfilepath[i].LastIndexOf('/') + 1)</a> 
+                                                               }
+
+                                                           }
+                                                           else
+                                                           {
+                                                            <a href="@attachfile" target="_blank" class="blue">@attachfile.Substring(@attachfile.LastIndexOf('/') + 1)</a>
+                                                           }
+                                                       }
+
+                                                    }
+                                                           
+                                                           </td>
+
+                                                       </tr>
+                                                   }
+
+
+                                               </tbody>
+
+                                            </table>
+
+                                            <table class="table">
+                                                <tr>
+                                                    <td class="page">
+                                                        <span style="float:left;" id=num ></span>
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <br />
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- 模块 -->
+
+            </div>
+        </div>
+       
+    </form>
+</body>
+

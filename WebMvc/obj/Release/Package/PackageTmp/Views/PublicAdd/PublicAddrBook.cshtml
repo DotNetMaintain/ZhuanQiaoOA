@@ -1,0 +1,82 @@
+﻿@{
+    ViewBag.Title = "PublicAddrBook";
+    Page.CheckApp = false;
+}
+
+
+        <div id="interface_inside">
+            <div id="interface_main">
+                <div id="tabs_config" class="tabsbox">
+
+                    <div class="clearboth"></div>
+
+
+                    <!-- 模块 -->
+
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>
+
+                                <div id="config_basic1" class="tabs_wrapper">
+                                    <div class="tabs_main" align="left">
+                                        <div id="Div1">
+
+                                            <table class="table subsubmenu">
+                                                <thead>
+                                                    <tr>
+                                                        <td>
+                                                            <a href="/Manage/Common/PublicAddrBook.aspx">员工通讯录</a>
+                                                            <a href="/Manage/Common/PublicAddrBook_Dep.aspx">组织机构通讯录</a>
+                                                        </td>
+                                                        <td style="text-align:right">
+                                                            <asp:Panel ID="panLogin" runat="server" DefaultButton="search_bt">
+                                                                <input type="text" name="keyword" maxlength=10 id="keyword" />
+                                                                <asp:Button runat=server ID=search_bt CssClass="textbutton" OnClick=Search_Btn Text=搜索 />
+                                                            </asp:Panel>
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                            <br />
+
+                                            <div id="PanelConfig">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="50">
+                                                                <asp:LinkButton ID="LinkButton1" runat=server OnClick=DownLoad OnClientClick='return confirm("确定要导出 组织人员通讯录吗？")'>导出</asp:LinkButton>
+                                                            </th>
+                                                            <td width="50"><span style="margin-left:15px;">序</span></td>
+                                                            <td style="width:30%">姓名</td>
+                                                            <td style="width:15%">移动电话</td>
+                                                            <td style="width:15%">固定电话</td>
+                                                            <td style="width:20%">查看</td>
+                                                            <td width="110"></td>
+                                                        </tr>
+                                                    </thead>
+
+                                                  
+                                                    <tr>
+                                                        <td class="page" colspan=7>
+                                                            <span style="float:left;" id=num runat=server></span>
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<uc1:Page ID="Page1" runat="server" />&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- 模块 -->
+
+                </div>
+            </div>
+        </div>
+
+

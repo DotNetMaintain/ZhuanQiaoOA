@@ -1,0 +1,123 @@
+html { width: 100%; height:100%; _height: 100%; overflow: hidden; }
+body { height: 100%; margin: 0; padding: 0;  font-size: 12px; font-family: tahoma,verdana; background: #ffffff; }
+table,tr,td,thead,tbody,tfoot,div,p,ul,li,form,input { padding: 0; margin: 0; }
+ul,li { padding: 0; margin: 0; list-style-type: none; }
+a { color: #000000; text-decoration: none; }
+.pointer { cursor: pointer; }
+.clearboth	{ clear: both; height: 0; font-size: 0; overflow: hidden; }
+#interface_close,#interface_size { float: right; padding-left: 13px; padding-top: 6px; cursor: pointer; }
+#interface_bt1 { float: right; margin-right:80px;padding-left: 20px; padding-top: 6px; cursor: pointer; }
+#interface_bt2 { float: right; margin-right:10px;padding-left: 20px; padding-top: 6px; cursor: pointer; }
+#interface_bt3 { float: right; margin-right:10px;padding-left: 20px; padding-top: 6px; cursor: pointer; }
+#interface_bt4 { float: right; margin-right:10px;padding-left: 20px; padding-top: 6px; cursor: pointer; }
+#interface_bt5 { float: right; margin-right:10px;padding-left: 20px; padding-top: 6px; cursor: pointer; }
+#interface_bt6 { float: right; margin-right:10px;padding-left: 20px; padding-top: 6px; cursor: pointer; }
+
+#desktop { height: 100%; min-height: 100%; _height: 100%; width: 100%; background: #3D71B8 url(images/desktop.jpg) 0 0 no-repeat; margin: 0 auto; text-align: left; cursor: default; }
+
+/* 无图版 #desktop { height: 100%; min-height: 100%; _height: 100%; width: 100%; background: #3D71B8; margin: 0 auto; text-align: left; cursor: default; }*/
+
+/*桌面快捷方式开始*/
+#wapper { top: 0; left: 0; z-index: 1; widht: 100%; height: 100%; }
+#lnkblock { position: absolute; top: 0; left: 0; width: 200px; height: 400px; }
+#lnkblock ul { margin: 15px 0 0 30px; }
+#lnkblock ul li { margin: 12px 0; width: 60px; line-height: 16px; text-align: center; }
+#lnkblock ul li img { width: 32px; height: 29px; overflow: hidden; }
+#lnkblock ul li a { display: block; color: #fff; font-weight:bold;}
+#lnkblock ul li a:hover { color: #fff; text-decoration: underline; font-weight:bold;}
+/*桌面快捷方式结束*/
+
+/*任务栏开始*/
+#taskblock { position: absolute; bottom: 0; left: 0; z-index: 2; height: 30px; width: 100%; overflow: hidden; background: #484C4F url(images/taskbg.gif) 0 0 repeat-x; text-align: left; }
+#taskblock #startbox { float: left; width: 86px; overflow: hidden; }
+#taskblock #startbox #startbtn { border: 0; display: block; cursor: pointer; width: 86px; height: 30px; line-height: 30px; padding-left: 15px; font-weight: bold; color: #000000; }
+#taskblock #startbox .startbtn_over { background: url(images/startbtn_over.gif) 0 0 no-repeat; }
+#taskblock #startbox .startbtn_out { background: url(images/startbtn_out.gif) 0 0 no-repeat; }
+#taskblock #taskbar { }
+/* 标准版 1024 不能使用 #taskblock #taskbar #taskgroup { float: left; width: 1030px; overflow: hidden; }*/
+#taskblock #taskbar #taskgroup { float: left; width: 660px; overflow: hidden; }
+#taskblock #taskbar #taskgroup ul { padding: 0; margin: 0;}
+#taskblock #taskbar #taskgroup li { float: left; width: 160px; height: 28px; margin: 0 3px; padding-left: 5px; overflow: hidden; }
+#taskblock #taskbar #taskgroup li.taskgroup_out { background: url(images/taskgroup_out.gif) 0 1px no-repeat; }
+#taskblock #taskbar #taskgroup li.taskgroup_over { background: url(images/taskgroup_over.gif) 0 1px no-repeat; }
+#taskblock #taskbar #taskgroup li.taskgroup_active { background: url(images/taskgroup_active.gif) 0 1px no-repeat; }
+#taskblock #taskbar #taskgroup li a { display: block; padding: 7px; color: #FFFFFF; }
+#taskblock #taskbar #taskgroup li a img { margin-right: 3px; }
+#taskblock #timebox { float: right; background: url(images/taskbar_clockico.gif) 0 0 no-repeat; line-height: 30px; color: #EEEEEE; text-align: right; width: 170px; padding-right: 20px; }
+#taskblock #online { float: right; line-height: 30px; color: #EEEEEE; text-align:left; width: 80px; }
+#taskblock #wdmsgbox { float: right; line-height: 30px; text-align: right; width: 30px; margin-right: 10px; }
+/*任务栏结束*/
+
+/*开始菜单开始*/
+#menubox { position: absolute; bottom: 34px; left: 0; width: 300px; height: 302px; z-index: 1000; display: none; }
+/*#menubox ul li img { margin-right: 6px; }*/
+
+#menubox .menubox_border_top,#menubox .menubox_border_bottom { height: 2px; overflow-y: hidden; }
+#menubox .menubox_border_top { background: url(images/menubox_top.gif) 0 0 no-repeat; }
+#menubox .menubox_border_bottom { background: url(images/menubox_bottom.gif) 0 0 no-repeat; }
+#menubox .menubox_outside { height: 100%; min-height: 100%; _height: 100%; border-left: 1px solid #181E24; border-right: 1px solid #181E24; }
+#menubox .menubox_inside { height: 100%; min-height: 100%; _height: 100%; padding: 0 5px; background: #373C40; border-left: 1px solid #909498; border-right: 1px solid #909498; }
+#menubox #menubox_logintitle { background: url(images/menubox_memberico.gif) 2px 5px no-repeat; padding: 6px 0 5px 25px; color: #FFFFFF; font-weight: bold; }
+
+#menubox #menubox_leftpart { float: left; background: #FFFFFF; width: 180px; height: 251px; padding: 6px 4px; color: #222222; }
+#menubox #menubox_leftpart #back_manage_mainmenu { position: relative; top: 0; left: 0; z-index: 101; }
+#menubox #menubox_leftpart #back_manage_mainmenu div { margin: 7px 0; font-size: 14px; cursor: pointer; height: 22px; line-height: 22px; }
+#menubox #menubox_leftpart #back_manage_mainmenu ul { display: block; width: 100%; background: url(images/menubox_arrowico.gif) right center no-repeat; }
+#menubox #menubox_leftpart #back_manage_mainmenu ul li { background: url(images/menubox_listico1.gif) 3px 5px no-repeat; padding-left: 25px; color: #165097; }
+#menubox #menubox_leftpart #back_manage_mainmenu .forleftmenubox_over { padding: 0; background: url(images/menubox_leftline.gif) 0 0 repeat-x; border: 1px solid #AACCF6; color: #15428B; }
+#menubox #menubox_leftpart #back_manage_mainmenu .forleftmenubox_out { background: none; color: #000000; padding: 1px; }
+
+
+#menubox #menubox_leftpart #back_manage_submenu { display: none; position: absolute; top: 0; left: 194px; background: #F0F0F0 url(images/submenubg.gif) 0 0 repeat-y; width: 150px; overflow: hidden; border: 1px solid #718BB7; z-index: 102; }
+#menubox #menubox_leftpart #back_manage_submenu div { display: none; margin: 0 2px; }
+#menubox #menubox_leftpart #back_manage_submenu ul { width: 100%; }
+#menubox #menubox_leftpart #back_manage_submenu ul li { margin: 5px 0; z-index: 103; height: 22px; line-height: 22px; }
+#menubox #menubox_leftpart #back_manage_submenu ul li a { display: block; background: url(images/menubox_listico2.gif) 3px center no-repeat; padding-left: 28px; color: #222222; }
+#menubox #menubox_leftpart #back_manage_submenu ul li a:hover { color: #008BBE; }
+#menubox #menubox_leftpart #back_manage_submenu .forleftmenubox_over { padding: 0; background: url(images/menubox_leftline.gif) 0 0 repeat-x; border: 1px solid #AACCF6; color: #15428B; }
+#menubox #menubox_leftpart #back_manage_submenu .forleftmenubox_out { background: none; color: #000000; padding: 1px; }
+
+#menubox #menubox_rightpart { float: left; width: 80px; margin-left: 8px; margin-top: 5px; color: #FFFFFF; }
+#menubox #menubox_rightpart ul { margin: 5px 0; cursor: pointer; }
+#menubox #menubox_rightpart ul li.forrightmenubox_over { border: 1px solid #000000; background: url(images/startbtn_line.gif) 0 0 repeat-x; padding: 3px 3px 3px 5px; }
+#menubox #menubox_rightpart ul li.forrightmenubox_out { border: 0; background: none; padding: 4px 4px 4px 6px; }
+#menubox #menubox_rightpart ul li img { margin-right: 6px; }
+#menubox #menubox_rightpart ul li a { color: #FFFFFF; display: block; }
+#menubox #menubox_rightpart .rightpartspace { border-top: 1px solid #18191A; border-bottom: 1px solid #858789; height: 0; font-size: 0; overflow: hidden; }
+
+/*开始菜单结束*/
+
+/*操作窗口开始*/
+
+
+#interface { position: absolute; display: none; overflow: hidden; }
+#interface #interface_wapper { position: relative; height: 100%; min-height: 100%; _height: 100%; }
+
+
+#interface #interface_head { position: absolute; top: 0; left: 0; width: 100%; z-index: 201; }
+#interface #interface_body { position: relative; top: 29px; left: 0; width: 100%; z-index: 200; }
+#interface #interface_foot { position: absolute; bottom: 0; left: 0; width: 100%; z-index: 201; }
+
+#interface #interface_head td.interface_head_left_td { background: url(images/interface_border_hl.gif) 0 0 no-repeat; width: 5px; height: 28px; overflow: hidden; }
+#interface #interface_head td.interface_head_center_td { padding: 0 8px; background: url(images/interface_border_hc.gif) 0 0 repeat-x; height: 28px; line-height: 28px; overflow: hidden; color: #3073BF; font-weight: bold; }
+#interface #interface_head td.interface_head_right_td { background: url(images/interface_border_hr.gif) 0 0 no-repeat; width: 5px; height: 28px; overflow: hidden; }
+
+#interface #interface_body td.interface_body_left_td { /* background: url(images/interface_border_bl.png) 0 0 repeat-y; */ background: url(images/interface_border_other.gif) 0 0 repeat-y; width: 5px; height: 100%; min-height: 100%; _height: 100%; overflow: hidden; }
+#interface #interface_body td.interface_body_center_td { margin: 0 5px; width: 100%; height: 100%; min-height: 100%; _height: 100%; }
+#interface #interface_body td.interface_body_right_td { /* background: url(images/interface_border_br.gif) 0 0 repeat-y; */ background: url(images/interface_border_other.gif) 0 0 repeat-y; width: 5px; height: 100%; min-height: 100%; _height: 100%; overflow: hidden; }
+
+#interface #interface_foot td.interface_foot_left_td { /* background: url(images/interface_border_fl.png) 0 bottom no-repeat; */ background: url(images/interface_border_other.gif) 0 bottom no-repeat; width: 5px; height: 5px; overflow: hidden; font-size: 0; }
+#interface #interface_foot td.interface_foot_center_td { /* background: url(images/interface_border_fc.png) 0 bottom repeat-x; */ background: url(images/interface_border_other.gif) 0 bottom repeat-x; height: 5px; overflow: hidden; font-size: 0; }
+#interface #interface_foot td.interface_foot_right_td { /* background: url(images/interface_border_fr.png) 0 bottom no-repeat; */ background: url(images/interface_border_other.gif) 0 bottom no-repeat; width: 5px; height: 5px; overflow: hidden; font-size: 0; }
+
+
+
+#interface #interface_wapper thead,#interface #interface_wapper tfoot,#interface #interface_wapper thead tr,#interface #interface_wapper tfoot tr { }
+#interface #interface_wapper thead td,#interface #interface_wapper tfoot td { height: 35px; overflow: hidden; filter:progid:DXImageTransform.Microsoft.alpha(opacity=60); -moz-opacity: 0.6; opacity: 0.6; }
+#interface #interface_content { width: 100%; height: 100%; min-height: 100%; _height: 100%; }
+/*#interfacewindow { filter:progid:DXImageTransform.Microsoft.alpha(opacity=30); -moz-opacity: 0.3; opacity: 0.3; }*/
+
+/*操作窗口结束*/
+
+p#vtip { display: none; position: absolute; padding: 10px;padding-bottom:1px; left: 5px; font-size: 10pt; background-color: white; border: 1px solid #a6c9e2; -moz-border-radius: 5px; -webkit-border-radius: 5px; z-index: 9999 }
+p#vtip #vtipArrow { position: absolute; top: -8px; left: 5px }

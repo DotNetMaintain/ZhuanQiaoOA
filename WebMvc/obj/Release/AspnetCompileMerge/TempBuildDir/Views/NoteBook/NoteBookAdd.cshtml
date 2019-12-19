@@ -1,0 +1,108 @@
+﻿@{
+    Page.CheckApp = false;
+    ViewBag.Title = "NoteBookAdd";
+}
+
+<script type="text/javascript" src="../../js/validator.js"></script>
+<link type="text/css" href="../../manage/Style/InterFace.Css" rel="stylesheet" rev="stylesheet" media="all" />
+<link type="text/css" href="../../manage/style.css" rel="stylesheet" rev="stylesheet" media="all" />
+<script type="text/javascript" src="../../js/jquery.js"></script>
+<script type="text/javascript" src="../../manage/include/common.js"></script>
+<script type="text/javascript">
+    var win = new RoadUI.Window();
+    var validate = new RoadUI.Validate();
+
+    function ShowIframe() {
+
+        var pop = new Popup({ contentType: 1, scrollType: 'no', isReloadOnClose: true, width: 568, height: 495 });
+
+        pop.setContent("contentUrl", "../../Controls/SelectMember?eid=namelist_dep&isunit=1&isdept=1&isstation=1&isuser=1&ismore=&isall=&isgroup=&rootid=&values=" + document.getElementById("namelist_dep").value + "&iframeid=dialogCase&openerid=tab_45b8d5063d2d46fb8fd43f6208793ae4");
+
+        pop.setContent("title", "发布资讯 - 部门选择");
+        pop.build();
+        pop.show();
+    }
+</script>
+
+
+<body>
+    <form action="" method="post">
+        @Html.AntiForgeryToken()
+        <div id="interface_inside">
+            <div id="interface_quick">
+                <div class="interface_quick_left">您现在的操作 >> 我的工具 >> 添加留言信息</div>
+                <div class="interface_quick_right">
+                    <a href="javascript:void(0)" onclick="javascript:window.location.replace(window.location.href);"><img style="vertical-align:middle;" src="/manage/images/reload.png" /><strong>刷新</strong></a>
+                    &nbsp; &nbsp;
+                    <a href="javascript:history.back();"><img style="vertical-align:middle;" src="../../manage/images/ico_up1.gif" /><strong>后退</strong></a>
+                </div>
+                <div class="clearboth"></div>
+            </div>
+            <div id="interface_main">
+                <div id="tabs_config" class="tabsbox">
+
+                    <div class="clearboth"></div>
+
+
+                    <!-- 模块 -->
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>
+
+                                <div id="config_basic1" class="tabs_wrapper">
+                                    <div class="tabs_main" align="left">
+                                        <div id="PanelConfig">
+
+                                         
+                                            <table class="table">
+                                               
+                                                <tr>
+                                                    <th style="width:100px;">* 便笺主题&nbsp;<a href="#" class="help">[?]</a></th>
+                                                    <td>
+                                                        <span class="note">便笺主题 如 工作小结、任务申请</span>
+                                                        <input name="Subject" type="text" datatype="Require" msg="主题不能为空" id="Subject" style="width:504px;" />
+                                                    </td>
+                                                </tr>
+                                                <tr id=tr>
+                                                    <th style="width:140px; font-weight:bold;">&nbsp;接收人：<a href="#" class="help">[?]</a></th>
+                                                    <td>
+
+                                                        <input type=hidden id=namelist name=namelist_dep value="" />
+                                                        <input name="namelist_text" type="text" id="namelist_text" class="mymember" />
+                                                        @*<input type=button value=接收部门 class="textbutton" onclick=ShowIframe() />*@
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="width:100px;">记事内容&nbsp;<a href="#" class="help">[?]</a></th>
+                                                    <td>
+                                                        <span class="note">请在这里输入内容 完毕点击保存</span>
+                                                        <textarea name=Bodys id=Bodys style="width:96%;height:320px;BACKGROUND-IMAGE: url(../../images/img/line.gif); LINE-HEIGHT: 22px; padding-left:10px; background-repeat:repeat; font-weight:bold; color:#000; font-size:10pt;" datatype="Require" msg="便笺内容不能为空!"></textarea>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="width:100px;">&nbsp;</th>
+                                                    <td>
+                                                        &nbsp;
+                                                     
+                                                        <input type="submit" name="Save" class="button" value='保存' /> &nbsp;&nbsp;
+                                                         <input type="reset" class="button" value='重置' />
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- 模块 -->
+
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+
+

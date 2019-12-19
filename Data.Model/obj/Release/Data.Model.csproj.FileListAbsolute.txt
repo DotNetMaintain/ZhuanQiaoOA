@@ -1,0 +1,15 @@
+E:\source\OA\OA\Data.Model\bin\Release\Data.Model.dll
+E:\source\OA\OA\Data.Model\bin\Release\Data.Model.pdb
+E:\source\OA\OA\Data.Model\obj\Release\Data.Model.dll
+E:\source\OA\OA\Data.Model\obj\Release\Data.Model.pdb
+E:\source\OA\OA\Data.Model\obj\Release\Data.Model.csprojResolveAssemblyReference.cache
+E:\source\颛桥OA\Data.Model\bin\Release\Data.Model.dll
+E:\source\颛桥OA\Data.Model\bin\Release\Data.Model.pdb
+E:\source\颛桥OA\Data.Model\obj\Release\Data.Model.csprojResolveAssemblyReference.cache
+E:\source\颛桥OA\Data.Model\obj\Release\Data.Model.dll
+E:\source\颛桥OA\Data.Model\obj\Release\Data.Model.pdb
+G:\source\公司源码\OA\颛桥OA源码\Data.Model\bin\Release\Data.Model.dll
+G:\source\公司源码\OA\颛桥OA源码\Data.Model\bin\Release\Data.Model.pdb
+G:\source\公司源码\OA\颛桥OA源码\Data.Model\obj\Release\Data.Model.csprojResolveAssemblyReference.cache
+G:\source\公司源码\OA\颛桥OA源码\Data.Model\obj\Release\Data.Model.dll
+G:\source\公司源码\OA\颛桥OA源码\Data.Model\obj\Release\Data.Model.pdb

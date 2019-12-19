@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/Theme/Common.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="~/Content/Theme/@Utility.Config.Theme/Style/style.css" id="style_style" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="~/Content/Theme/@Utility.Config.Theme/Style/ui.css" id="style_ui" rel="stylesheet" type="text/css" media="screen"/> 
+    <link href="~/Content/Theme/style_login.css" rel="stylesheet" type="text/css" media="screen" /> 
+    <link rel="stylesheet" type="text/css" href="../../js/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../../js/themes/icon.css" />
+    <script type="text/javascript" src="../../js/jquery.js"></script>
+    <script type="text/javascript" src='../../js/outlook2.js'> </script>  
+    <script src="../../js/artDialog/artDialog.source.js" type="text/javascript"></script>
+    <script src="../../js/artDialog/iframeTools.source.js" type="text/javascript"></script>
+
+    <script type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+    @Scripts.Render("~/bundles/script")
+</head>
+
+<body @Html.Raw(Page.BodyStyle)>
+    @{
+        string checkAppMsg = string.Empty;
+        if ((Page.CheckApp == null || Page.CheckApp == true) && !WebMvc.Common.Tools.CheckApp(out checkAppMsg, Request.QueryString["appid"]))
+        {
+            Response.Write("<label style='font-size:12px;'>" + (checkAppMsg.IsNullOrEmpty() ? "应用程序权限检查错误" : checkAppMsg) + "</label>");
+            Response.End();
+        }
+    }
+    @RenderBody()
+</body>
+</html>

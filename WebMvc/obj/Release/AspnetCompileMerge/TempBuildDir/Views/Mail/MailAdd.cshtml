@@ -1,0 +1,205 @@
+@{
+    ViewBag.Title = "发送邮件";
+    Business.Platform.Dictionary BDictionary = new Business.Platform.Dictionary();
+    Business.Platform.WorkFlow BWorkFlow = new Business.Platform.WorkFlow();
+    Business.Platform.WorkFlowTask BWorkFlowTask = new Business.Platform.WorkFlowTask();
+
+
+
+
+}
+
+<script type="text/javascript" src="../../js/validator.js"></script>
+<link type="text/css" href="../../manage/Style/InterFace.Css" rel="stylesheet" rev="stylesheet" media="all" />
+<link type="text/css" href="../../manage/style.css" rel="stylesheet" rev="stylesheet" media="all" />
+<script type="text/javascript" src="../../js/jquery.js"></script>
+<script type="text/javascript" src="../../js/FunctionJS.js"></script>
+<script type="text/javascript" src="../../manage/include/common.js"></script>
+
+<link rel="stylesheet" href="../../KindEditor4/themes/default/default.css" />
+<link rel="stylesheet" href="../../KindEditor4/plugins/code/prettify.css" />
+<script type="text/javascript" charset="utf-8" src="../../KindEditor4/kindeditor.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../KindEditor4/lang/zh_CN.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../KindEditor4/plugins/code/prettify.js"></script>
+
+<script type="text/javascript">
+    KindEditor.ready(function (K) {
+        var editor1 = K.create('#Bodys', {
+            cssPath: '../../KindEditor4/plugins/code/prettify.css',
+            uploadJson: '../../KindEditor4/upload_json.aspx',
+            fileManagerJson: '../../KindEditor4/file_manager_json.aspx'
+        });
+        prettyPrint();
+    });
+
+
+    $(function () {
+        @Html.Raw(ViewBag.Script);
+        top.mainDialog.close();
+
+
+    });
+
+</script>
+
+<script type="text/javascript" src="../../js/popup/popup.js"></script>
+<script type="text/javascript">
+    function showProcessing(type) {
+        var title = "正在处理";
+        switch (type) {
+            case "save": title = "正在保存..."; break;
+            case "submit": title = "正在发送..."; break;
+            case "back": title = "正在退回..."; break;
+            case "redirect": title = "正在转交..."; break;
+        }
+
+        var iframeid=document.forms[0];
+        top.mainDialog.open({
+            title: title, width: 260, height: 120, url: top.rootdir + "/WorkFlowRun/Process?op=" + type,
+            openerid: iframeid, resize: false, showclose: true, showico: true
+        });
+    }
+
+
+    function mailsend()
+    {
+       // alert(document.getElementById("Mails.Subject").value);
+        if (document.getElementById("Mails.Subject").value == "")
+        {
+            document.getElementById("Mails.Subject").value = "无主题 ！";
+        }
+        if (document.getElementById("Mails.ReceiverID").value == "")
+        {
+            alert("收件人不可为空！")
+            return false;
+        }
+        var options = {};
+        options.type = "submit";
+        showProcessing(options.type);
+
+    }
+</script>
+
+
+<body>
+    <form action="" method="post">
+        @Html.AntiForgeryToken()
+        <div id="interface_inside">
+            <div id="interface_quick">
+                <div class="interface_quick_left">您现在的操作 >> 我的邮件 >> 发送新邮件</div>
+                <div class="interface_quick_right">
+                    <a href="javascript:void(0)" onclick="javascript:window.location.replace(window.location.href);"><img style="vertical-align:middle;" src="../../manage/images/reload.png" /><strong>刷新</strong></a>
+                    &nbsp; &nbsp;
+                    <a href="javascript:history.back();"><img style="vertical-align:middle;" src="../../manage/images/ico_up1.gif" /><strong>后退</strong></a>
+                </div>
+                <div class="clearboth"></div>
+            </div>
+            <div id="interface_main">
+                <div id="tabs_config" class="tabsbox">
+
+
+                    <div class="clearboth"></div>
+
+
+                    <!-- 模块 -->
+
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>
+
+                                <div id="config_basic1" class="tabs_wrapper">
+                                    <div class="tabs_main" align="left">
+                                        <div id="PanelConfig">
+
+                                            <table class="table subsubmenu">
+                                                <thead>
+                                                    <tr>
+                                                        <td>
+                                                            撰写新邮件
+                                                        </td>
+                                                        <td style="text-align:right"></td>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                            <br />
+
+                                            <table class="table1">
+                                                <thead>
+                                                    <tr>
+                                                        <td><a href="#" class="helpall">[?]</a></td>
+                                                        <td>
+
+                                                            <input type="submit" class="button" name="Save" value='发送' onclick="mailsend()" />
+
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                                <tr>
+                                                    <th style="width:40px; font-weight:bold;">&nbsp;* 主题：<a href="#" class="help">[?]</a></th>
+                                                    <td style="width:70%; align-content:flex-start;">
+                                                        <span class="note">请输入主题</span>
+                                                        <input name="Mails.Subject" datatype="Require" msg="主题不能为空" type="text" value="" id="Mails.Subject" size=97 />
+                                                    </td>
+                                                </tr>
+
+                                                <tr id=tr>
+                                                    <th style="width:40px; font-weight:bold;">&nbsp;收件人：<a href="#" class="help">[?]</a></th>
+                                                    <td style="width:70%;">
+
+                                                        <input type=hidden id=ReceiverID name=ReceiverID value="" />
+                                                        <input name="Mails.ReceiverID" type="text" id="Mails.ReceiverID" class="mymember" />
+
+                                                    </td>
+                                                </tr>
+                                                <tr id=tr>
+                                                    <th style="width:40px; font-weight:bold;">&nbsp;抄送：<a href="#" class="help">[?]</a></th>
+                                                    <td style="width:70%;">
+
+                                                        <input type=hidden id=CCIDs name=CCIDs value="" />
+                                                        <input name="Mails.CCIDs" type="text" id="Mails.CCIDs" class="mymember" />
+
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <th style="width:40px; font-weight:bold;">* 正文&nbsp;<a href="#" class="help">[?]</a></th>
+                                                    <td style="width:70%;">
+                                                        <span class="note">请输入 正文内容. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Shift+Enter 换行, Enter 段落</span>
+                                                        <textarea id="Bodys" name="Bodys" style="width:80%;height:300px;"></textarea>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <th style="width:40px; font-weight:bold;">附件&nbsp;<a href="#" class="help">[?]</a></th>
+                                                    <td style="width:70%;">
+                                                        <span class="note">可批量添加附件,附件总大小上限 50M. </span>
+                                                        &nbsp;&nbsp;<span style="font-weight:bold;">添加附件</span>
+                                                        <br />
+                                                        <input size=71 name="Mails.fileattech" type="text" id="Mails.fileattech" class="myfile" />
+
+                                                    </td>
+                                                </tr>
+
+
+
+
+
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- 模块 -->
+
+                </div>
+            </div>
+        </div>
+
+    </form>
+</body>
+
+

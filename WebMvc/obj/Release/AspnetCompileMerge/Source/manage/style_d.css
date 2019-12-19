@@ -1,0 +1,36 @@
+﻿*{font-size:12px/18px; font-family:Tahoma,Verdana,宋体}
+body{background:#D2E0F2; }
+html{overflow-x:hidden;OVERFLOW-Y: auto; ; scrollbar-face-color: #DBEBFE; scrollbar-shadow-color: #B8D6FA; scrollbar-highlight-color: #FFFFFF; scrollbar-3dlight-color: #DBEBFE; scrollbar-darkshadow-color:#458CE4; scrollbar-track-color: #FFFFFF; scrollbar-arrow-color: #458CE4;}
+a{ color:Black; text-decoration:none;}
+a:hover{ color:Red; text-decoration:underline;}
+.textbox03 {border: #878787 1px solid;padding: 4px 3px;font:Verdana, Geneva, sans-serif,宋体;line-height: 14px; background-color: #fff;  height: auto; font-size: 14px;  font-weight: bold; width: 190px; }
+
+.txt01{font:Verdana, Geneva, sans-serif,宋体;padding:3px 2px 2px 2px; border-width:1px; border-color:#ddd;  color:#000;}
+.txt {border: #878787 1px solid;padding: 4px 3px;font:Verdana, Geneva, sans-serif,宋体;line-height: 14px; background-color: #fff;  height: auto; font-size: 14px;}
+.footer{text-align:center;color:#15428B; margin:0px; padding:0px;line-height:23px; font-weight:bold;}
+
+.head a{color:White;text-decoration:underline;}
+
+.navlist{list-style-type:none;margin:0px; padding:10px;}
+.navlist li{ padding:0px;}
+.navlist li a{line-height:24px;}
+.navlist li div{margin:1px 0px; border:1px dashed #ffffff;}
+.navlist li div.hover{border:1px dashed #99BBE8; background:#E0ECFF;cursor:pointer;}
+.navlist li div.hover a{color:#416AA3;}
+.navlist li div.selected{border:1px solid #99BBE8; background:#E0ECFF;cursor:default;}
+.navlist li div.selected a{color:#416AA3; font-weight:bold;}
+
+
+.third_ul{ list-style-type:none;margin:0px; padding:0px; display:none;}
+.third_ul li{ padding-left:20px;}
+
+#interface_bt1 { float: right; margin-right:30px;padding-left: 20px; padding-top: 6px; cursor: pointer; }
+#interface_bt2 { float: right; margin-right:10px;padding-left: 20px; padding-top: 6px; cursor: pointer; }
+#interface_bt3 { float: right; margin-right:10px;padding-left: 20px; padding-top: 6px; cursor: pointer; }
+#interface_bt4 { float: right; margin-right:10px;padding-left: 20px; padding-top: 6px; cursor: pointer; }
+#interface_bt5 { float: right; margin-right:10px;padding-left: 20px; padding-top: 6px; cursor: pointer; }
+#interface_bt6 { float: right; margin-right:10px;padding-left: 20px; padding-top: 6px; cursor: pointer; }
+#interface_bt7 { float: right; margin-right:10px;padding-left: 20px; padding-top: 6px; cursor: pointer; }
+#interface_bt8 { float: right; margin-right:10px;padding-left: 20px; padding-top: 6px; cursor: pointer; }
+#interface_bt9 { float: right; margin-right:10px;padding-left: 20px; padding-top: 6px; cursor: pointer; }
+#interface_bt10 { float: right; margin-right:10px;padding-left: 20px; padding-top: 6px; cursor: pointer; }

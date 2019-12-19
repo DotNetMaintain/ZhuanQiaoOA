@@ -1,0 +1,151 @@
+﻿@{
+
+    ViewBag.Title = "邮件删除列表";
+    Business.Platform.Dictionary BDictionary = new Business.Platform.Dictionary();
+    Business.Platform.Users BUser = new Business.Platform.Users();
+    Business.Platform.Mail email = new Business.Platform.Mail();
+    List<Data.Model.Mails> lstobjmails = email.GetDelAccount(Business.Platform.Users.CurrentUserID);
+
+}
+
+
+<script type="text/javascript" src="../../js/validator.js"></script>
+<link type="text/css" href="../../manage/Style/InterFace.Css" rel="stylesheet" rev="stylesheet" media="all" />
+<link type="text/css" href="../../manage/style.css" rel="stylesheet" rev="stylesheet" media="all" />
+<script type="text/javascript" src="../../js/jquery.js"></script>
+<script type="text/javascript" src="../../js/FunctionJS.js"></script>
+<script type="text/javascript" src="../../manage/include/common.js"></script>
+
+<link rel="stylesheet" href="../../KindEditor4/themes/default/default.css" />
+<link rel="stylesheet" href="../../KindEditor4/plugins/code/prettify.css" />
+<script type="text/javascript" charset="utf-8" src="../../KindEditor4/kindeditor.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../KindEditor4/lang/zh_CN.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../KindEditor4/plugins/code/prettify.js"></script>
+
+
+<body>
+    <form action="" method="post">
+        @Html.AntiForgeryToken()
+        <div id="interface_inside">
+            <div id="interface_quick">
+                <div class="interface_quick_left">您现在的操作 >> 我的邮件 >></div>
+                <div class="interface_quick_right">
+                    <a href="javascript:void(0)" onclick="javascript:window.location.replace(window.location.href);"><img style="vertical-align:middle;" src="/manage/images/reload.png" /><strong>刷新</strong></a>
+                    &nbsp; &nbsp;
+                    <a href="javascript:history.back();"><img style="vertical-align:middle;" src="/manage/images/ico_up1.gif" /><strong>后退</strong></a>
+                </div>
+                <div class="clearboth"></div>
+            </div>
+            <div id="interface_main">
+                <div id="tabs_config" class="tabsbox">
+
+
+                    <div class="clearboth"></div>
+
+
+                    <!-- 模块 -->
+                    <div id="config_basic1" class="tabs_wrapper">
+                        <div class="tabs_main" align="left">
+                            <div id="PanelConfig">
+
+                                <table class="table subsubmenu">
+                                    <thead>
+                                        <tr>
+                                            <td>
+                                                <a href="#">删除撤销</a>
+                                                <a href="#">彻底删除</a>
+                                            </td>
+
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <br>
+                                <div id="PanelDefault">
+
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:8%">
+
+                                                    <input type="checkbox" name=ckb class="checkall">
+                                                </th>
+                                                <td style="width:15%">收件人</td>
+                                                <td>主题</td>
+                                                <td style="width:25%">时间</td>
+                                            </tr>
+                                        </thead>
+                                        @foreach (var mail in lstobjmails.OrderByDescending(p => p.SendTime))
+                                        {
+                                            <tr>
+                                                <th width="50"><input id=chk type="checkbox"></th>
+                                                <td>
+                                                    <span style="margin-left:10px;">
+                                                        @{
+                                            string sendername = string.Empty;
+                                            string[] lstSender = mail.SenderIDs.Split(',');
+                                            foreach (var sender in lstSender)
+                                            {
+                                                sendername = sendername + BUser.Get(sender.ToGuid()).Name + ";";
+                                            }
+
+                                            @sendername
+
+                                                        }
+
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a href="javascript:void(0);" onclick="openPage('Mail/Mail_View?appid=abadf0e2-2aae-466e-bd39-e03f37be4ec9&id=@mail.id', '邮件查看', 'abadf0e2-2aae-466e-bd39-e03f37be4ec9','@mail.id','9c92a09fc9fa407385cb6fd62c0550dd','@Business.Platform.Users.CurrentUserID.ToString()'); return false;" class="blue">@mail.Subject</a>
+
+                                                </td>
+                                                <td class="vtip" title=''>
+                                                    @mail.SendTime
+                                                </td>
+
+                                            </tr>
+
+                                        }
+
+
+
+
+                                    </table>
+
+                                    <table class="table">
+                                        <tr>
+                                            <td class="page">
+                                                <span style="float:left;" id=num runat=server></span>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<uc1:Page ID="Page1" runat="server" />&nbsp;&nbsp;&nbsp;&nbsp;
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <br />
+
+
+                                    <!-- 模块 -->
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+
+
+
+<script type="text/javascript">
+
+    function openPage(url, title, id, guid, table_name, userid) {
+        top.openApp(url, 0, title, id, 0, 0, false);
+        var para = "guid=" + guid + "&table_name=" + table_name + "&userid=" + userid;
+        deliveryConfig('../../Ajax/InsertReadLog.ashx', para);
+        // window.reload();
+    }
+
+</script>
+
+

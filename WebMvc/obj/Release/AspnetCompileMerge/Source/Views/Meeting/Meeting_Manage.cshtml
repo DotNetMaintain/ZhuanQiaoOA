@@ -1,0 +1,140 @@
+﻿@{
+    Page.CheckApp = false;
+    ViewBag.Title = "Meeting_Manage";
+}
+  
+    <link type="text/css" href="../../manage/Style/InterFace.Css" rel="stylesheet" rev="stylesheet" media="all" />
+    <link type="text/css" href="../../manage/style.css" rel="stylesheet" rev="stylesheet" media="all" />
+<script src="../../js/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script type="text/javascript" src="../../js/validator.js"></script>
+<link type="text/css" href="../../manage/Style/InterFace.Css" rel="stylesheet" rev="stylesheet" media="all" />
+<link type="text/css" href="../../manage/style.css" rel="stylesheet" rev="stylesheet" media="all" />
+<script type="text/javascript" src="../../js/jquery.js"></script>
+<script type="text/javascript" src="../../manage/include/common.js"></script>
+  
+   <script type="text/javascript">
+    var win = new RoadUI.Window();
+    var validate = new RoadUI.Validate();
+
+    function ShowIframe() {
+
+        var pop = new Popup({ contentType: 1, scrollType: 'no', isReloadOnClose: true, width: 568, height: 495 });
+
+        pop.setContent("contentUrl", "../../Controls/SelectMember?eid=namelist_dep&isunit=1&isdept=1&isstation=1&isuser=1&ismore=&isall=&isgroup=&rootid=&values=" + document.getElementById("namelist_dep").value + "&iframeid=dialogCase&openerid=tab_45b8d5063d2d46fb8fd43f6208793ae4");
+
+        pop.setContent("title", "发布资讯 - 部门选择");
+        pop.build();
+        pop.show();
+    }
+</script>
+
+
+<body>
+    <form action=""  method="post">
+        @Html.AntiForgeryToken()
+        <div id="interface_inside">
+            <div id="interface_quick">
+                <div class="interface_quick_left">您现在的操作 >> 我的工具 >> 添加会议</div>
+                <div class="interface_quick_right">
+                    <a href="javascript:void(0)" onclick="javascript:window.location.replace(window.location.href);"><img style="vertical-align:middle;" src="../../manage/images/reload.png" /><strong>刷新</strong></a>
+                    &nbsp; &nbsp;
+                    <a href="javascript:history.back();"><img style="vertical-align:middle;" src="../../manage/images/ico_up1.gif" /><strong>后退</strong></a>
+                </div>
+                <div class="clearboth"></div>
+            </div>
+            <div id="interface_main">
+                <div id="tabs_config" class="tabsbox">
+
+                    <div class="clearboth"></div>
+
+
+                    <!-- 模块 -->
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>
+
+                                <div id="config_basic1" class="tabs_wrapper">
+                                    <div class="tabs_main" align="left">
+                                        <div id="Div1">
+
+                                            <table class="table subsubmenu">
+                                                <thead>
+                                                    <tr>
+                                                        <td>
+                                                            <a href="Index">会议列表</a>
+                                                            <a href="Meeting_Manage?appid=bc995c4d-83e1-4537-b639-e83f172203f1">添加会议</a>
+                                                        </td>
+                                                        <td style="text-align:right"></td>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                            <br />
+
+                                            <div id="PanelConfig">
+
+                                                <table class="table1">
+                                                    <thead>
+                                                        <tr>
+                                                            <td><a href="#" class="helpall">[?]</a></td>
+                                                            <td>
+                                                                &nbsp;
+                                                                <input type="submit" class="button" value='保存' name="Save" /> &nbsp;&nbsp; <input type="reset" class="button" value='重置' />
+                                                            </td>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tr>
+                                                        <th style="width:145px; font-weight:bold;  color:#ff0000;">&nbsp;* 会议主题：<a href="#" class="help">[?]</a></th>
+                                                        <td>
+                                                            <span class="note">请输入 会议主题。</span>
+                                                            <input name="MainTopics" datatype="Require" msg="会议主题不能为空" type="text" value="" id="MainTopics" style="width:550px;" />
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th style="width:145px; font-weight:bold;">&nbsp; 时间和地点：<a href="#" class="help">[?]</a></th>
+                                                        <td>
+                                                            <span class="note">请输入 会议的时间和地点.</span>&nbsp;&nbsp;
+                                                            会议时间：<input name="CTime" type="text" value="" id="CTime" size=30 onclick="WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm:ss' })" />
+                                                            会议地点：<input name="Address" type="text" value="" id="Address" size=30 />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="width:145px; font-weight:bold;">&nbsp; 与会人员</th>
+                                                        <td>
+                                                            <input name="Mails.ReceiverID" type="text" id="Mails.ReceiverID" class="mymember" style="width:500px;" />
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th style="width:145px; font-weight:bold;">&nbsp; 附件：<a href="#" class="help">[?]</a></th>
+                                                        <td>
+                                                            <input size=71 name="AcceptAttech" type="text" id="AcceptAttech" class="myfile" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="width:145px; font-weight:bold;">&nbsp; 是否邮件通知</th>
+                                                        <td>
+                                                            <input id="chkmail" type="checkbox" />
+                                                        </td>
+                                                    </tr>
+
+                                                </table>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <!-- 模块 -->
+
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+

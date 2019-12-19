@@ -1,0 +1,399 @@
+﻿@{
+
+   
+    ViewBag.Title = "邮件收件箱列表";
+    Business.Platform.Dictionary BDictionary = new Business.Platform.Dictionary();
+    Business.Platform.Users BUser = new Business.Platform.Users();
+    Business.Platform.Mail email = new Business.Platform.Mail();
+    //int foldtype = Convert.ToInt32(Request.QueryString["FoldType"]);
+    //int foldtype = 2;
+    //List<Data.Model.Mails> lstobjmails = email.GetAccount(out pager,Business.Platform.Users.CurrentUserID, foldtype,query);
+    Business.Platform.Mails_Detail emaildetail = new Business.Platform.Mails_Detail();
+
+    Business.Platform.Users buser = new Business.Platform.Users();
+    Business.Platform.WorkGroup bworkgroup = new Business.Platform.WorkGroup();
+    Business.Platform.Organize borganize = new Business.Platform.Organize();
+    Business.Platform.UsersRelation brelation = new Business.Platform.UsersRelation();
+    List<Data.Model.UsersRelation> lstrelation = new List<Data.Model.UsersRelation>();
+
+    
+   
+
+}
+
+@model List<Data.Model.Mails>
+    <script type="text/javascript" src="../../js/validator.js"></script>
+    <link type="text/css" href="../../manage/Style/InterFace.Css" rel="stylesheet" rev="stylesheet" media="all" />
+    <link type="text/css" href="../../manage/style.css" rel="stylesheet" rev="stylesheet" media="all" />
+    <script type="text/javascript" src="../../js/jquery.js"></script>
+    <script type="text/javascript" src="../../js/FunctionJS.js"></script>
+    <script type="text/javascript" src="../../manage/include/common.js"></script>
+
+    <link rel="stylesheet" href="../../KindEditor4/themes/default/default.css" />
+    <link rel="stylesheet" href="../../KindEditor4/plugins/code/prettify.css" />
+    <script type="text/javascript" charset="utf-8" src="../../KindEditor4/kindeditor.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../../KindEditor4/lang/zh_CN.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../../KindEditor4/plugins/code/prettify.js"></script>
+    <script type="text/javascript">
+
+        var appid = '@ViewBag.AppID';
+        var iframeid = '@ViewBag.TabID';
+        var foldtype = '@ViewBag.foldtype';
+        var dialog = top.mainDialog;
+        var rootdir = '@Url.Content("~/")';
+
+
+        $(function () {
+
+            GetClickTableValue();
+
+        })
+
+        var data = [];
+        function GetClickTableValue() {  //jquery获取复选框值
+            $('table tr').not('#td').click(function () {
+
+                var chk_value = [];
+
+                $('input[name="checkbox"]:checked').each(function () {
+
+                    chk_value.push($(this).val());
+
+                });
+
+                data = chk_value;
+
+            });
+        }
+
+
+    </script>
+
+
+
+    <body>
+        <form action="" method="post">
+            @Html.AntiForgeryToken()
+            <div id="interface_inside">
+                <div id="interface_quick">
+                    <div class="interface_quick_left">您现在的操作 >> 我的邮件 >></div>
+                    <div class="interface_quick_right">
+                        <a href="javascript:void(0)" onclick="javascript:window.location.replace(window.location.href);"><img style="vertical-align:middle;" src="/manage/images/reload.png" /><strong>刷新</strong></a>
+                        &nbsp; &nbsp;
+                        <a href="javascript:history.back();"><img style="vertical-align:middle;" src="/manage/images/ico_up1.gif" /><strong>后退</strong></a>
+                    </div>
+                    <div class="clearboth"></div>
+                </div>
+                <div id="interface_main">
+                    <div id="tabs_config" class="tabsbox">
+
+
+                        <div class="clearboth"></div>
+
+
+                        <!-- 模块 -->
+                        <div id="config_basic1" class="tabs_wrapper">
+                            <div class="tabs_main" align="left">
+                                <div id="PanelConfig">
+
+                                    <table class="table subsubmenu">
+                                        <thead>
+                                            <tr>
+                                                <td >
+                                                    <a href="javascript:void(0);" onclick="del('Virtualdelete')">删除至垃圾箱</a>
+                                                    <a href="javascript:void(0);" onclick="del('delete')">彻底删除</a>
+                                                </td>
+
+                                                <td>查询类型：<select  name="type" id="type">
+                                                        <option value="receiveid">收件人</option>
+                                                        <option value="sender">发件人</option>
+                                                        <option value="subject">主题</option>
+                                                        <option value="serdertime">时间</option>
+</select>查询内容：<input id="searchtext" type="text" name="searchtext" value="" /><input id="btn_search" type="submit" value="查询" /></td>
+
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                    <br>
+                                    <div id="PanelDefault">
+
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    
+                                                    <td style="width:5%">全选<input type="checkbox" name=ckb class="checkall"></td>
+                                                    <td style="width:10%">发件人</td>
+                                                    <td style="width:25%">收件人</td>
+                                                    <td style="width:30%">主题</td>
+                                                    <td style="width:15%">时间</td>
+                                                    <td style="width:12%">状态</td>
+                                                </tr>
+                                            </thead>
+
+                                            @foreach (var mail in Model.OrderByDescending(p=>p.SendTime))
+                                            {
+                                                <tr>
+                                                    <td style="width:5%">
+                                                        <input type="checkbox" value="@mail.id" name="checkbox" id="chk" class="checkdelete" />
+                                                    </td>
+                                                    <td style="width:10%">
+                                                        <span style="margin-left:10px;">
+
+                                                            @BUser.Get(mail.SenderIDs.ToGuid()).Name
+                                                        </span>
+                                                    </td>
+
+
+                                                    <td style="width:25%">
+                                                        <span style="margin-left:10px;">
+
+                                                            @{
+                                                string name = string.Empty;
+                                                if (Convert.ToInt32(mail.did) > 0)
+                                                {
+
+                                                    var objmaildetail = emaildetail.Get(Convert.ToInt32(mail.did));
+                                                    if (objmaildetail.ReceiveIDs != null)
+                                                    {
+
+                                                        string[] lstreceiver = objmaildetail.ReceiveIDs.Split(',');
+
+
+                                                        string receiverid = string.Empty;
+                                                        if (lstreceiver.Length > 3)
+                                                        {
+                                                            for (int i = 0; i < 3; i++)
+                                                            {
+                                                                if (string.IsNullOrEmpty(lstreceiver[i]))
+                                                                {
+                                                                    continue;
+
+                                                                }
+                                                                if (lstreceiver[i].Substring(0, 2) == "u_")
+                                                                {
+                                                                    receiverid = lstreceiver[i].Substring(2);
+                                                                    name = name + BUser.Get(receiverid.ToGuid()).Name + ";";
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (lstreceiver[i].Substring(0, 2) == "w_")
+                                                                    {
+                                                                        Data.Model.WorkGroup wg = bworkgroup.Get(lstreceiver[i].Substring(2).ToGuid());
+                                                                        if (wg == null)
+                                                                        { continue; }
+                                                                        name = name + wg.Name + ";";
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        receiverid = lstreceiver[i];
+                                                                        if (BUser.Get(receiverid.ToGuid()) == null)
+                                                                        {
+                                                                            if (BUser.Get(receiverid.ToGuid()) == null)
+                                                                            {
+                                                                                if (borganize.Get(receiverid.ToGuid()) == null)
+                                                                                {
+                                                                                    continue;
+
+                                                                                }
+                                                                                else
+                                                                                {
+
+                                                                                    lstrelation = brelation.GetAllByOrganizeID(receiverid.ToGuid());
+                                                                                    foreach (var m in lstrelation)
+                                                                                    {
+                                                                                        if (BUser.Get(m.UserID) == null)
+                                                                                        {
+                                                                                            continue;
+                                                                                        }
+                                                                                        name = name + BUser.Get(m.UserID).Name;
+                                                                                    }
+
+                                                                                }
+
+
+
+
+                                                                            }
+
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            name = name + BUser.Get(receiverid.ToGuid()).Name + ";";
+                                                                            
+                                                                        }
+                                                                        
+                                                                    }
+
+                                                                }
+
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            for (int i = 0; i < lstreceiver.Length; i++)
+                                                            {
+                                                                if (string.IsNullOrEmpty(lstreceiver[i]))
+                                                                {
+                                                                    continue;
+
+                                                                }
+                                                                if (lstreceiver[i].Substring(0, 2) == "u_")
+                                                                {
+                                                                    receiverid = lstreceiver[i].Substring(2);
+                                                                    if (BUser.Get(receiverid.ToGuid()) == null )
+                                                                    {
+                                                                        continue;
+                                                                    }
+                                                                    name = name + BUser.Get(receiverid.ToGuid()).Name + ";";
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (lstreceiver[i].Substring(0, 2) == "w_")
+                                                                    {
+                                                                        Data.Model.WorkGroup wg = bworkgroup.Get(lstreceiver[i].Substring(2).ToGuid());
+                                                                        name = name + wg.Name + ";";
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        receiverid = lstreceiver[i];
+                                                                        if (BUser.Get(receiverid.ToGuid()) == null)
+                                                                        {
+                                                                            if (borganize.Get(receiverid.ToGuid()) == null)
+                                                                            {
+                                                                                continue;
+
+                                                                            }
+                                                                            else
+                                                                            {
+
+                                                                                lstrelation = brelation.GetAllByOrganizeID(receiverid.ToGuid());
+                                                                                foreach (var m in lstrelation)
+                                                                                {
+                                                                                    if (BUser.Get(m.UserID) == null)
+                                                                                    {
+                                                                                        continue;
+                                                                                    }
+                                                                                    else
+                                                                                    {
+
+                                                                                        name = name + BUser.Get(m.UserID).Name + ";";
+                                                                                    }
+
+                                                                                }
+
+                                                                            }
+
+
+
+
+                                                                        }
+                                                                        else
+                                                                        {
+
+                                                                            name = name + BUser.Get(receiverid.ToGuid()).Name + ";";
+                                                                        }
+
+                                                                    }
+
+
+                                                                }
+
+                                                            }
+                                                        }
+
+
+
+                                                    }
+
+
+                                                }
+                                                            }
+
+
+                                                            @name
+
+                                                        </span>
+                                                    </td>
+
+                                                    <td style="width:30%">
+                                                        <a href="javascript:void(0);" onclick="openPage('Mail/Mail_View?appid=40ece51d-4aaa-4a24-93d2-454c5d66323e&id=@mail.id', '邮件查看', '40ece51d-4aaa-4a24-93d2-454c5d66323e','@mail.id','40ece51d4aaa4a2493d2454c5d66323e','@Business.Platform.Users.CurrentUserID.ToString()'); return false;" class="blue">@mail.Subject</a>
+
+                                                    </td>
+                                                    <td  style="width:15%">
+                                                        @mail.SendTime
+                                                    </td>
+                                                    <td  style="width:12%">
+                                                        @{
+                                                string status = string.Empty;
+                                                if (mail.IsRead == 0)
+                                                {
+                                                    status = "<span style='color:red'>未读</span>";
+                                                }
+                                                else
+                                                {
+                                                    status = "已读";
+                                                }
+
+                                                        }
+                                                        @Html.Raw(status)
+
+                                                    </td>
+
+                                                </tr>
+
+                                            }
+
+
+
+
+                                        </table>
+
+                                        <table class="table">
+                                            <tr>
+                                                <td class="page">
+                                                    <div class="buttondiv">@Html.Raw(ViewBag.Pager)</div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <br />
+
+
+                                        <!-- 模块 -->
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </body>
+
+
+
+    <script type="text/javascript">
+
+        function openPage(url, title, id, guid, table_name, userid) {
+            top.openApp(url, 0, title, id, 0, 0, false);
+            var para = "guid=" + guid + "&table_name=" + table_name + "&userid=" + userid + "&IsRead=1" + "&key=" + guid;
+            deliveryConfig('../../Ajax/UpdateMailType.ashx', para);
+
+            window.reload();
+        }
+
+
+        function del(deltype) {
+
+            var para = 'action=' + deltype + '&key=' + data;
+            deliveryConfig('../../Ajax/UpdateMailType.ashx', para, '删除成功！');
+
+
+        }
+
+    </script>
+
+

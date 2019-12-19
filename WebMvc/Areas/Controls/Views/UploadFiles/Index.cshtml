@@ -1,0 +1,386 @@
+﻿@{
+    string extName = string.Empty;
+    string filesWebSite = Url.Content("~/Controls/UploadFiles/Upload");
+    string tmpID = Guid.NewGuid().ToString("N");
+    string tmpID1 = string.Empty;
+    Page.CheckApp = false;
+}
+
+<!--<script src="~/Scripts/Uploadify/jquery-1.7.2.min.js" type="text/javascript"></script>
+<script src="~/Scripts/Uploadify/jquery.Huploadify.js" type="text/javascript"></script>
+<link href="~/Scripts/Uploadify/Huploadify.css" rel="stylesheet" type="text/css" />
+
+
+<script src="~/Scripts/Huploadify/jquery.js" type="text/javascript"></script>
+<script src="~/Scripts/Huploadify/jquery.Huploadify.js" type="text/javascript"></script>
+<link href="~/Scripts/Huploadify/Huploadify.css" rel="stylesheet" type="text/css" />-->
+
+
+<script src="~/Scripts/Huploadify/jquery.min.js" type="text/javascript"></script>
+<script src="~/Scripts/Huploadify/jquery.uploadifive.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="~/Scripts/Huploadify/uploadifive.css">
+<style type="text/css">
+    body {
+        font: 13px Arial, Helvetica, Sans-serif;
+    }
+
+    .uploadifive-button {
+        float: left;
+        margin-right: 10px;
+    }
+
+    #queue {
+        border: 1px solid #E5E5E5;
+        height: 177px;
+        overflow: auto;
+        margin-bottom: 10px;
+        padding: 0 3px 3px;
+        width: 300px;
+    }
+
+
+    .uploadify-ico {
+        border: none 0;
+        vertical-align: middle;
+        margin-right: 3px;
+    }
+</style>
+    <form runat="server" id="form1">
+        <table cellpadding="0" cellspacing="0" border="0" width="98%" align="center" style="margin-top:8px;">
+            <tr>
+                <td style="height:40px;" id="uploadtable">
+                 <div id="upload"></div>
+
+                    <input id="file_upload" name="file_upload" type="file" multiple="true">
+                    <a style="position: relative; top: 8px;" href="javascript:$('#file_upload').uploadifive('upload')">Upload Files</a>
+                 
+                <td align="right" style="padding-right:20px;">
+                    <input type="button" class="mybutton" value="删除所选" onclick="delselect()" />
+                    <input type="button" class="mybutton" value="&nbsp;确&nbsp;&nbsp;认&nbsp;" onclick="confirm1();" />
+                    <input type="button" class="mybutton" value="&nbsp;关&nbsp;&nbsp;闭&nbsp;" onclick="closewin();" />
+                </td>
+            </tr>
+        </table>
+        <div id="queue" style="margin:0 auto 5px 0;"></div>
+        <div id="filelist">
+            <table cellpadding="0" cellspacing="1" border="0" id="filetable" width="98%" class="listtable" style="width:98%; margin:0 auto;">
+                <thead>
+                    <tr>
+                        <th style="width:70%">文件</th>
+                        <th style="width:20%">大小(KB)</th>
+                        <th><input type="checkbox" id="checkall" onclick="checkallbox(this);" style="vertical-align:middle;" />删除</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @{
+                    string files = Request.QueryString["files"];
+                    if (!files.IsNullOrEmpty())
+                    {
+                        string[] filesArray = files.Split('|');
+                        foreach (string file in filesArray)
+                        {
+                            string size = Utility.Tools.GetFileSize(Server.MapPath(file));
+                  
+                    <tr>
+                        <td style="background:#ffffff;"><a target="_blank" href="@file"><img alt="" class="uploadify-ico" src="@Url.Content("~/Images/ico/doc_stand.png")" style="border:none;" />@file.Substring(file.LastIndexOf('/')+1)</a></td>
+                        <td style="background:#ffffff;">@size</td>
+                        <td style="background:#ffffff;"><input type="checkbox" name="delfile" value="@file" /></td>
+                    </tr>
+                 
+                        }
+                    }    
+                }
+                </tbody>
+            </table>
+        </div>
+	</form>
+
+	<script type="text/javascript">
+    var filesWebSite = '@filesWebSite';
+    var win = new RoadUI.Window();
+    var eid = '@Request.QueryString["eid"]';
+
+
+
+        $(function() {
+            $('#file_upload').uploadifive({
+                'auto'             : true,
+                'formData': { "str1": "@tmpID", "str2": "@tmpID1" },
+                'method': 'post',//上传文件的提交方法，取值‘post‘或‘get‘。
+                'multi': true,//设置值为false时，一次只能选中一个文件
+                'queueSizeLimit': 12,//上传队列中一次可容纳的最大条数
+                'buttonText': '选择文件',//定义显示在默认按钮上的文本
+                'dnd': true,//如果设置为 false ， 拖放功能将不被启用
+                'fileObjName': 'Filedata',//定义上传数据处理文件中接收数据使用的文件对象名
+                'fileSizeLimit': 99999999999,//上传文件大小限制,单位KB
+                'breakPoints': true,//是否开启断点续传
+                'fileSplitSize': 1024 * 10,//断点续传的文件块大小，单位Byte，默认1M
+                'getUploadedSize': function (file) {
+                    var data = {
+                        data: {
+                            fileName: file.name,
+                            lastModifiedDate: file.lastModifiedDate.getTime()
+                        }
+                    };
+                    var url = filesWebSite;
+                    var uploadedSize = 0;
+                    $.ajax({
+                        url: url,
+                        data: data,
+                        async: false,
+                        type: 'POST',
+                        success: function (returnData) {
+                            returnData = JSON.parse(returnData);
+                            uploadedSize = returnData.uploadedSize;
+                        }
+                    });
+                    return uploadedSize;
+                },//类型：function，自定义获取已上传文件的大小函数，用于开启断点续传模式，可传入一个参数file，即当前上传的文件对象，需返回number类型
+                'saveUploadedSize': null,//类型：function，自定义保存已上传文件的大小函数，用于开启断点续传模式，可传入两个参数：file：当前上传的文件对象，value：已上传文件的大小，单位Byte
+                'saveInfoLocal': true,//用于开启断点续传模式，是否使用localStorage存储已上传文件大小
+                'queueID'          : 'queue',
+                'uploadScript'     : filesWebSite,
+                'onUploadComplete': function (file, data)
+                {
+                    var dataArray = data.split('|');
+                    if (dataArray.length > 0 && dataArray[0] == "1") {
+                        addFile(file, dataArray);
+                    }
+                    else {
+                        alert(data);
+                    }
+                },
+                'onSelect': function () {
+                    $("#queue").show();
+                },
+                'onQueueComplete': function () {
+                    $("#queue").hide(1000);
+                },
+                onUploadSuccess: function (file, data) {
+                    var dataArray = data.split('|');
+                    if (dataArray.length > 0 && dataArray[0] == "1") {
+                        addFile(file, dataArray);
+                    }
+                    else {
+                        alert(data);
+                    }
+                }
+            });
+        })
+
+
+
+
+
+
+    function GetExt(file_name) {
+        var pos = file_name.lastIndexOf(".");
+        var result = file_name.substring(pos);
+        return result;
+    }
+
+
+
+
+
+
+    @*$(function(){
+        var up = $('#upload').Huploadify({
+            auto:true,
+            fileTypeExts:'*.*',
+            multi:true,
+            fileSizeLimit:99999999,
+            breakPoints:true,
+            saveInfoLocal:true,
+            showUploadedPercent:true,//是否实时显示上传的百分比，如20%
+            showUploadedSize:true,
+            removeTimeout:9999999,
+            uploader: filesWebSite,
+            queueID: 'queue',
+            onUploadStart:function(){
+                //up.settings('formData', {aaaaa:'1111111',bb:'2222'});
+                up.Huploadify('settings', 'formData', { "str1": "@tmpID", "str2": "@tmpID1" });
+            },
+            onSelect: function () {
+                $("#queue").show();
+            },
+            onQueueComplete: function () {
+                $("#queue").hide(1000);
+            },
+            onUploadSuccess: function (file, data) {
+                var dataArray = data.split('|');
+                if (dataArray.length > 0 && dataArray[0] == "1") {
+                    // addFile(file, dataArray);
+                    alert(data);
+                }
+                else {
+                    alert(data);
+                }
+            },
+            onUploadComplete:function(){
+                //alert('上传完成');
+            },
+            getUploadedSize:function(file){
+                var data = {
+                    data : {
+                        fileName : file.name,
+                        lastModifiedDate : file.lastModifiedDate.getTime()
+                    }
+                };
+                var url = filesWebSite ;
+                var uploadedSize = 0;
+                $.ajax({
+                    url : url,
+                    data : data,
+                    async : false,
+                    type : 'POST',
+                    success : function(returnData){
+                        returnData = JSON.parse(returnData);
+                        uploadedSize = returnData.uploadedSize;
+                    }
+                });
+                return uploadedSize;
+            }	
+        });
+    })*@
+
+
+    @*$(document).ready(function () {
+
+
+        $("#upload").Huploadify({
+
+            //选择文件后自动上传
+            auto: true,
+            //允许上传的文件后缀
+            fileTypeExts: '*.*',
+            //设置为true将允许多文件上传
+            multi: true,
+            //大小限制,整形单位是KB
+            fileSizeLimit: '20480',
+            //图片处理页面
+            uploader: filesWebSite + 'Upload',
+            'queueID': 'queue',
+            //发送给后台的其他参数通过formData指定
+            formData: { "str1": "@tmpID", "str2": "@tmpID1" },
+            onUploadSuccess: function (file, data) {
+                    var dataArray = data.split('|');
+                    if (dataArray.length > 0 && dataArray[0] == "1") {
+                        addFile(file, dataArray);
+                    }
+                    else {
+                        alert(data);
+                    }
+                },
+                onUploadComplete: function (file,data) {
+
+                    
+
+                    //addFile(file);
+
+                },
+                'onSelect': function () {
+                    $("#queue").show();
+                },
+                'onQueueComplete': function () {
+                    $("#queue").hide(1000);
+                }
+
+
+            });
+
+
+            //===========
+
+        })*@
+
+
+
+
+
+
+
+
+        function addFile(file, dataArray)
+	    {
+	       if (dataArray.length != 4) return;
+	        var tr = '<tr>';
+	        tr += '<td style="background:#ffffff;">';
+	        tr += '<a href="' + dataArray[1] + '" target="_blank">';
+	        tr += '<img src="@Url.Content("~/Images/ico/doc_stand.png")" alt="" class="uploadify-ico" />';
+	        tr += dataArray[3];
+	        tr += '</a>';
+	        tr += '</td>';
+	        tr += '<td style="background:#ffffff;">';
+	        tr += dataArray[2];
+	        tr += '</td>';
+	        tr += '<td style="background:#ffffff;">';
+	        tr += '<input type="checkbox" name="delfile" value="' + dataArray[1] + '" />';
+	        tr += '</td>';
+	        tr += '</tr>';
+	        $("#filetable tbody").append(tr);
+	        return false;
+	    }
+	    function checkallbox(box)
+	    {
+	        $("input[name='delfile']").prop("checked", $(box).prop("checked"));
+        }
+	    function confirm1()
+	    {
+	        var title = [];
+	        var value = [];
+	        $("#filetable tbody tr").each(function ()
+	        {
+	            var filename = $("td:eq(0)", $(this)).text();
+	            var filepathname = $("input[name='delfile']", $(this)).val();
+	            title.push(filename);
+	            value.push(filepathname);
+	        });
+	        var ele = win.getOpenerElement(eid);
+	        var ele1 = win.getOpenerElement(eid + "_text");
+	        if (ele1 != null && ele1.size() > 0)
+	        {
+	            ele1.val('共' + value.length + '个文件');
+	        }
+	        if (ele != null && ele.size() > 0)
+	        {
+	            ele.val(value.join('|'));
+	        }
+	        closewin();
+	    }
+	    function closewin()
+	    {
+	        try
+	        {
+	            $('#file_upload').uploadify('destroy');
+	        } catch (e)
+	        {
+
+	        }
+	        win.close();
+	    }
+	    function delselect()
+	    {
+	        if ($(":checkbox[name='delfile']:checked").size() == 0)
+	        {
+	            alert("您没有选择要删除的文件!");return;
+            }
+            $(":checkbox[name='delfile']:checked").each(function ()
+            {
+                var box = $(this);
+                var file = box.val();
+                $.getScript(filesWebSite + "Delete?file=" + file , function ()
+                {
+                    if ("1" == json.success)
+                    {
+                        box.parent().parent().remove();
+                    }
+                    else
+                    {
+                        alert(json.message);
+                    }
+                });
+            });
+
+	    }
+	</script>

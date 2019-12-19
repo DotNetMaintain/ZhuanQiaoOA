@@ -1,0 +1,22 @@
+.dd { float:left; width:256px; height:auto; margin:1px 2px 2px; line-height:200%; }
+.dd li { height:46px; overflow:hidden; line-height:130%; color:#bbb; padding:2px 3px 0 6px; font-size:12px; }
+.dd li span { float:right; color:#000; }
+.dd a {
+	color:#000;
+}
+.dd a:hover {
+	color:#f39800;
+}
+.star { float:left; width:24px; height:24px; background:url(star.gif) no-repeat; }
+.dirtitle { float:left; width:160px; height:24px; font-size:16px; font-weight:bold; color:#f60;text-align:left; }
+
+.fr { float:right}.fl { float:left}.clear { clear:both}
+.clearfix:after{clear:both; content:'.'; display:block; visibility:hidden; height:0}.clearfix{display:inline-block}
+* html .clearfix {zoom:100%}.clearfix{display:block}
+hr { clear:both; height:0; border-color:#ace; border-style:solid; border-width:1px 0 0;}
+h1 { font-size:32px;}h2 { font-size:28px;}h3 { font-size:24px;}h4 { font-size:20px;}h5 { font-size:14px;}h6 { font-size:12px;}
+table { margin-top:10px; border-left:1px solid #ace; border-top:1px solid #ace; width:90%;border-collapse:collapse; border-spacing:0}
+table a { color:#000}
+th, td { vertical-align:middle; text-align:center; height:25px; line-height:25px; border-right:1px solid #ace; border-bottom:1px solid #ace;}
+td { font-size:12px;}
+th { background:#ECF1F9}
